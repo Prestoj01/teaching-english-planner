@@ -73,7 +73,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
         </label>
 
         <label className="span-2">
-          Target language <span className="hint">grammar point, vocabulary set or function</span>
+          <span className="label-text">Target language <span className="hint">grammar point, vocabulary set or function</span></span>
           <input
             value={req.targetLanguage}
             onChange={(e) => update('targetLanguage', e.target.value)}
@@ -125,7 +125,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
         </label>
 
         <label>
-          First language <span className="hint">predicts common mistakes</span>
+          <span className="label-text">First language <span className="hint">for L1 tips</span></span>
           <input list="l1-options" value={req.learnerL1} onChange={(e) => update('learnerL1', e.target.value)} placeholder="e.g. Japanese" />
           <datalist id="l1-options">
             {L1_OPTIONS.map((l) => <option key={l} value={l} />)}
@@ -141,7 +141,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
         </label>
 
         <label className="span-3">
-          Notes <span className="hint">optional: constraints, materials, goals</span>
+          <span className="label-text">Notes <span className="hint">optional: constraints, materials, goals</span></span>
           <textarea rows={2} value={req.notes} onChange={(e) => update('notes', e.target.value)} placeholder="e.g. Online class on Zoom, no printing. Students are preparing for job interviews." />
         </label>
       </fieldset>
