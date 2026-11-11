@@ -28,6 +28,7 @@ export function Settings({ settings, onSave }: Props) {
         Claude API key
         <div className="inline">
           <input
+            className="mono"
             type={show ? 'text' : 'password'}
             autoComplete="off"
             value={draft.apiKey}

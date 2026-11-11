@@ -115,6 +115,7 @@ input, select, textarea {
   background: #fff; color: var(--ink); width: 100%;
 }
 textarea { resize: vertical; }
+.mono { font-family: var(--font-mono); font-size: var(--text-sm); letter-spacing: 0.02em; }
 .inline { display: flex; gap: var(--s-2); }
 .hint { color: var(--ink-3); font-weight: 400; font-size: var(--text-sm); }
 .framework-help { margin: 0; padding: var(--s-3) var(--s-4); background: var(--brand-soft); border-radius: var(--r-md); font-size: var(--text-sm); grid-column: span 4; }
@@ -149,7 +150,7 @@ th { background: var(--surface-sunk); }
 .timing.warn { background: var(--warn-soft); color: var(--warn); }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
 @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
-.board { background: var(--chalk); color: var(--chalk-ink); padding: var(--s-3); border-radius: var(--r-md); white-space: pre-wrap; font-size: var(--text-sm); }
+.board { background: var(--chalk); color: var(--chalk-ink); padding: var(--s-3); border-radius: var(--r-md); white-space: pre-wrap; font-family: var(--font-sans); font-size: var(--text-sm); margin: 0; }
 
 /* ─── Library ─── */
 .library-head { display: flex; gap: var(--s-4); flex-wrap: wrap; justify-content: space-between; align-items: center; }
