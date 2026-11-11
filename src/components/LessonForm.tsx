@@ -62,7 +62,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
 
   return (
     <form className="card form" onSubmit={(e) => { e.preventDefault(); submit('template') }}>
-      <h2>Plan a lesson</h2>
+      <h2>Turn a topic into a timed, CELTA-style lesson</h2>
 
       <label className="span-2">
         Topic / theme

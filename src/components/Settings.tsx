@@ -14,7 +14,7 @@ export function Settings({ settings, onSave }: Props) {
 
   return (
     <section className="card form">
-      <h2>Settings</h2>
+      <h2>Optional: write plans with your own Claude key</h2>
       <div className="span-2 callout">
         <p>
           <strong>The planner is completely free and works without AI.</strong> AI generation is optional.

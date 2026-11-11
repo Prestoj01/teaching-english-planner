@@ -141,11 +141,11 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
 
       <section className="two-col">
         <div>
-          <h3>Support</h3>
+          <h3>Support for weaker learners</h3>
           <List editing={editing} items={plan.differentiation.support} onChange={(v) => set('differentiation', { ...plan.differentiation, support: v })} />
         </div>
         <div>
-          <h3>Stretch</h3>
+          <h3>Stretch for stronger learners</h3>
           <List editing={editing} items={plan.differentiation.stretch} onChange={(v) => set('differentiation', { ...plan.differentiation, stretch: v })} />
         </div>
       </section>
