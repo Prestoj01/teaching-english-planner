@@ -21,7 +21,7 @@ export function About() {
         {FRAMEWORKS.map((f) => (
           <div key={f}>
             <dt>{FRAMEWORK_INFO[f].name} ({f})</dt>
-            <dd>{FRAMEWORK_INFO[f].summary} <em>Best for: {FRAMEWORK_INFO[f].bestFor}</em></dd>
+            <dd>{FRAMEWORK_INFO[f].summary} <span className="best-for">Best for: {FRAMEWORK_INFO[f].bestFor}</span></dd>
           </div>
         ))}
       </dl>

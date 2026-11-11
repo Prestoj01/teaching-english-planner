@@ -119,6 +119,7 @@ textarea { resize: vertical; }
 .hint { color: var(--ink-3); font-weight: 400; font-size: var(--text-sm); }
 .framework-help { margin: 0; padding: var(--s-3) var(--s-4); background: var(--brand-soft); border-radius: var(--r-md); font-size: var(--text-sm); grid-column: span 4; }
 @media (max-width: 760px) { .framework-help { grid-column: auto; } }
+.best-for { display: block; margin-top: var(--s-1); color: var(--ink-2); }
 .actions { display: flex; gap: var(--s-2); flex-wrap: wrap; align-items: center; grid-column: 1 / -1; margin: var(--s-2) 0; }
 .error { color: var(--danger); }
 .callout { background: var(--brand-soft); padding: var(--s-3) var(--s-4); border-radius: var(--r-md); font-weight: 400; }

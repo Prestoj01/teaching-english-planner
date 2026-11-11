@@ -110,7 +110,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
       </label>
 
       <p className="framework-help span-2">
-        <strong>{fw.name}:</strong> {fw.summary} <em>Best for: {fw.bestFor}</em>
+        <strong>{fw.name}:</strong> {fw.summary} <span className="best-for">Best for: {fw.bestFor}</span>
       </p>
 
       <label>
