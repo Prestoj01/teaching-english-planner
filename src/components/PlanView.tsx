@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Icon } from './Icon'
+import { Timeline } from './Timeline'
 import { FRAMEWORK_INFO } from '../data/frameworks'
 import { downloadFile, planToMarkdown, slugify } from '../export'
 import { INTERACTIONS, type Interaction, type LessonPlan, type Stage } from '../schema'
@@ -25,24 +27,25 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
   return (
     <article className="card plan">
       <div className="toolbar no-print">
-        <button onClick={() => setEditing((e) => !e)}>{editing ? 'Done editing' : 'Edit'}</button>
-        <button onClick={onSave} disabled={saved}>{saved ? 'Saved ✓' : 'Save to My Lessons'}</button>
-        {onRegenerate && <button className="secondary" onClick={onRegenerate}>Try different activities</button>}
-        <button className="secondary" onClick={() => window.print()}>Print / PDF</button>
+        <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
+        <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
+        {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
+        <button className="secondary" onClick={() => window.print()}><Icon name="printer" /> Print</button>
         <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
-          Download .md
+          <Icon name="download" /> Download .md
         </button>
-        <span className={`badge ${plan.source}`}>{plan.source === 'ai' ? 'AI-generated' : 'Template'}</span>
       </div>
 
-      <Text editing={editing} value={plan.title} onChange={(v) => set('title', v)} as="h2" />
+      <div className="plan-title"><Text editing={editing} value={plan.title} onChange={(v) => set('title', v)} as="h2" /></div>
       <dl className="meta">
         <div><dt>Level</dt><dd>{r.level}</dd></div>
         <div><dt>Learners</dt><dd>{r.ageGroup}, {r.classSize} students</dd></div>
         {r.learnerL1 && <div><dt>L1</dt><dd>{r.learnerL1}</dd></div>}
         <div><dt>Length</dt><dd>{r.durationMinutes} min</dd></div>
         <div><dt>Framework</dt><dd>{FRAMEWORK_INFO[r.framework].name}</dd></div>
+        {plan.source === 'ai' && <div><dt>Written by</dt><dd>Claude</dd></div>}
       </dl>
+      <Timeline stages={plan.stages} />
 
       <section>
         <h3>Aims</h3>
@@ -75,7 +78,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
       <section>
         <h3>
           Procedure{' '}
-          <span className={`timing ${total === r.durationMinutes ? 'ok' : 'warn'}`}>
+          <span key={total} className={`timing ${total === r.durationMinutes ? 'ok' : 'warn'} flash`} aria-live="polite">
             {total} / {r.durationMinutes} min
           </span>
         </h3>
@@ -141,11 +144,11 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
 
       <section className="two-col">
         <div>
-          <h3>Support</h3>
+          <h3>Support for weaker learners</h3>
           <List editing={editing} items={plan.differentiation.support} onChange={(v) => set('differentiation', { ...plan.differentiation, support: v })} />
         </div>
         <div>
-          <h3>Stretch</h3>
+          <h3>Stretch for stronger learners</h3>
           <List editing={editing} items={plan.differentiation.stretch} onChange={(v) => set('differentiation', { ...plan.differentiation, stretch: v })} />
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { downloadFile } from '../export'
+import { Icon } from './Icon'
 import { parseImport } from '../storage'
 import type { LessonPlan } from '../schema'
 
@@ -32,9 +33,9 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
   }
 
   return (
-    <section className="card">
+    <section className="card stack">
       <div className="library-head">
-        <h2>My lessons ({plans.length})</h2>
+        <h2>Your saved lesson plans</h2>
         <input type="search" placeholder="Search by title, topic or level…" value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
       <p className="hint">
@@ -46,9 +47,9 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
           disabled={plans.length === 0}
           onClick={() => downloadFile(`esl-lessons-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(plans, null, 2), 'application/json')}
         >
-          Export backup
+          <Icon name="download" /> Export
         </button>
-        <button className="secondary" onClick={() => fileInput.current?.click()}>Import backup</button>
+        <button className="secondary" onClick={() => fileInput.current?.click()}><Icon name="upload" /> Import</button>
         <input
           ref={fileInput}
           type="file"
@@ -56,7 +57,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
           hidden
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImport(f); e.target.value = '' }}
         />
-        {message && <span className="hint">{message}</span>}
+        {message && <span key={message} className="hint confirm" role="status">{message}</span>}
       </div>
 
       {shown.length === 0 ? (
@@ -67,17 +68,17 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
             <li key={p.id}>
               <button className="link" onClick={() => onOpen(p)}>
                 <strong>{p.title}</strong>
-                <span className="hint">
+                <span className="hint lesson-meta">
                   {p.request.level} · {p.request.focus} · {p.request.durationMinutes} min · {new Date(p.updatedAt).toLocaleDateString()}
                 </span>
               </button>
               <div className="row-actions">
-                <button className="secondary small" onClick={() => onDuplicate(p)}>Duplicate</button>
+                <button className="secondary small" onClick={() => onDuplicate(p)}><Icon name="copy" size={14} /> Duplicate</button>
                 <button
                   className="danger small"
                   onClick={() => { if (confirm(`Delete "${p.title}"?`)) onDelete(p.id) }}
                 >
-                  Delete
+                  <Icon name="trash" size={14} /> Delete
                 </button>
               </div>
             </li>
