@@ -86,7 +86,7 @@ export default function App() {
         <nav>
           {(['plan', 'library', 'settings', 'about'] as Tab[]).map((t) => (
             <button key={t} className={tab === t ? 'tab active' : 'tab'} onClick={() => setTab(t)}>
-              {{ plan: 'Plan a lesson', library: `My lessons (${plans.length})`, settings: 'Settings', about: 'About' }[t]}
+              {{ plan: 'Plan', library: `My lessons (${plans.length})`, settings: 'Settings', about: 'About' }[t]}
             </button>
           ))}
         </nav>
@@ -142,7 +142,7 @@ export default function App() {
       </main>
 
       <footer className="no-print">
-        Free and open source · Your lessons stay in your browser ·{' '}
+        Free and open source ·{' '}
         <a href="https://github.com/Prestoj01/teaching-english-planner" target="_blank" rel="noreferrer">GitHub</a>
       </footer>
     </div>

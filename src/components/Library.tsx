@@ -34,7 +34,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
   return (
     <section className="card">
       <div className="library-head">
-        <h2>My lessons ({plans.length})</h2>
+        <h2>My lessons</h2>
         <input type="search" placeholder="Search by title, topic or level…" value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
       <p className="hint">
@@ -46,9 +46,9 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
           disabled={plans.length === 0}
           onClick={() => downloadFile(`esl-lessons-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(plans, null, 2), 'application/json')}
         >
-          Export backup
+          Export
         </button>
-        <button className="secondary" onClick={() => fileInput.current?.click()}>Import backup</button>
+        <button className="secondary" onClick={() => fileInput.current?.click()}>Import</button>
         <input
           ref={fileInput}
           type="file"

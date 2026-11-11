@@ -26,9 +26,9 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
     <article className="card plan">
       <div className="toolbar no-print">
         <button onClick={() => setEditing((e) => !e)}>{editing ? 'Done editing' : 'Edit'}</button>
-        <button onClick={onSave} disabled={saved}>{saved ? 'Saved ✓' : 'Save to My Lessons'}</button>
+        <button onClick={onSave} disabled={saved}>{saved ? 'Saved ✓' : 'Save'}</button>
         {onRegenerate && <button className="secondary" onClick={onRegenerate}>Try different activities</button>}
-        <button className="secondary" onClick={() => window.print()}>Print / PDF</button>
+        <button className="secondary" onClick={() => window.print()}>Print</button>
         <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
           Download .md
         </button>

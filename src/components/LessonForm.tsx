@@ -139,7 +139,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
       {error && <p className="error span-2" role="alert">{error}</p>}
 
       <div className="actions span-2">
-        <button type="submit" disabled={busy}>Generate plan (free, offline)</button>
+        <button type="submit" disabled={busy}>Generate plan</button>
         <button
           type="button"
           className="secondary"
@@ -149,7 +149,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
         >
           {busy ? 'Generating…' : '✨ Generate with AI'}
         </button>
-        {!aiAvailable && <span className="hint">AI is optional: add your own API key in Settings to enable it.</span>}
+        {!aiAvailable && <span className="hint">Add an API key in Settings to use AI.</span>}
       </div>
     </form>
   )
