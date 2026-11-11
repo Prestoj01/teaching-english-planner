@@ -68,7 +68,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
             <li key={p.id}>
               <button className="link" onClick={() => onOpen(p)}>
                 <strong>{p.title}</strong>
-                <span className="hint">
+                <span className="hint lesson-meta">
                   {p.request.level} · {p.request.focus} · {p.request.durationMinutes} min · {new Date(p.updatedAt).toLocaleDateString()}
                 </span>
               </button>

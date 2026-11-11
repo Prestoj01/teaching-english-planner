@@ -151,6 +151,10 @@ textarea { resize: vertical; }
 .callout { background: var(--brand-soft); padding: var(--s-3) var(--s-4); border-radius: var(--r-md); font-weight: 400; }
 .callout p { margin: 0; }
 
+/* Figures that sit in columns, change while you type, or get compared use tabular numerals. */
+.num, input[type='number'], .timing, .meta dd, .stages td:nth-child(2), .lesson-meta, button.tab { font-variant-numeric: tabular-nums; }
+.stages td:nth-child(2) { text-align: right; padding-right: var(--s-4); }
+
 /* ─── Plan ─── */
 .toolbar { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; margin-bottom: var(--s-5); }
 .meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0 0 var(--s-4); }
