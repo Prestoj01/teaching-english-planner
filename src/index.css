@@ -84,7 +84,9 @@ header { display: flex; flex-wrap: wrap; gap: var(--s-4); justify-content: space
 .brand p { margin: 0; color: var(--ink-3); font-size: var(--text-sm); }
 .logo { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); background: var(--brand); color: var(--brand-ink); font-family: var(--font-serif); font-size: var(--text-xl); position: relative; }
 .logo::after { content: ''; position: absolute; right: 7px; bottom: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-nav { display: flex; gap: var(--s-1); flex-wrap: wrap; }
+/* Nested shapes: inner radius = outer radius − padding, so the curves stay concentric. */
+nav { --pad: 4px; display: flex; gap: 2px; flex-wrap: wrap; padding: var(--pad); background: var(--surface-sunk); border: 1px solid var(--line); border-radius: var(--r-lg); }
+nav button.tab { border-radius: calc(var(--r-lg) - var(--pad)); }
 
 /* ─── Buttons ─── */
 button {
@@ -109,7 +111,7 @@ button.cta:hover:not(:disabled) .icon { transform: translateX(3px); }
 button.small { padding: var(--s-1) var(--s-3); font-size: var(--text-xs); }
 button.tab { background: transparent; color: var(--ink-2); border-color: transparent; }
 button.tab:hover:not(:disabled) { background: var(--surface-sunk); border-color: transparent; }
-button.tab.active { background: var(--brand-soft); color: var(--brand); border-color: var(--brand-soft); }
+button.tab.active { background: var(--surface); color: var(--brand); border-color: var(--line); }
 button.link { background: none; border: none; color: inherit; padding: 0; text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: 0; font-weight: 400; font-size: inherit; }
 button.link:hover:not(:disabled) { background: none; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #7fb9a7; outline-offset: 1px; }
@@ -135,7 +137,11 @@ input, select, textarea {
 }
 textarea { resize: vertical; }
 .mono { font-family: var(--font-mono); font-size: var(--text-sm); letter-spacing: 0.02em; }
-.inline { display: flex; gap: var(--s-2); }
+.input-group { --pad: 4px; display: flex; align-items: center; gap: var(--s-1); padding: var(--pad); border: 1px solid var(--line-strong); border-radius: var(--r-md); background: #fff; }
+.input-group:focus-within { outline: 3px solid #7fb9a7; outline-offset: 1px; }
+.input-group input { border: 0; padding: calc(var(--s-2) - var(--pad)) calc(var(--s-3) - var(--pad)); }
+.input-group input:focus-visible { outline: none; }
+.input-group button { border-radius: calc(var(--r-md) - var(--pad)); }
 .hint { color: var(--ink-3); font-weight: 400; font-size: var(--text-sm); }
 .framework-help { margin: 0; padding: var(--s-3) var(--s-4); background: var(--brand-soft); border-radius: var(--r-md); font-size: var(--text-sm); align-self: end; }
 .best-for { display: block; margin-top: var(--s-1); color: var(--ink-2); }

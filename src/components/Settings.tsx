@@ -27,7 +27,7 @@ export function Settings({ settings, onSave }: Props) {
 
       <label>
         Claude API key
-        <div className="inline">
+        <div className="input-group">
           <input
             className="mono"
             type={show ? 'text' : 'password'}
