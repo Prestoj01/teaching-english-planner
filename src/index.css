@@ -63,6 +63,9 @@
 * { box-sizing: border-box; }
 body { margin: 0; }
 h1, h2, h3, h4 { line-height: 1.2; margin: 0 0 var(--s-2); }
+h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; }
+p, li, dd { text-wrap: pretty; }
+h2 { max-width: 28ch; }
 h1, h2 { font-family: var(--font-serif); font-weight: 600; letter-spacing: -0.01em; }
 h2 { font-size: var(--text-2xl); }
 h3 { font-size: var(--text-lg); margin-top: var(--s-6); }
