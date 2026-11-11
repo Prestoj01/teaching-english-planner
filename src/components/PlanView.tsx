@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Icon } from './Icon'
+import { Timeline } from './Timeline'
 import { FRAMEWORK_INFO } from '../data/frameworks'
 import { downloadFile, planToMarkdown, slugify } from '../export'
 import { INTERACTIONS, type Interaction, type LessonPlan, type Stage } from '../schema'
@@ -35,7 +36,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         </button>
       </div>
 
-      <Text editing={editing} value={plan.title} onChange={(v) => set('title', v)} as="h2" />
+      <div className="plan-title"><Text editing={editing} value={plan.title} onChange={(v) => set('title', v)} as="h2" /></div>
       <dl className="meta">
         <div><dt>Level</dt><dd>{r.level}</dd></div>
         <div><dt>Learners</dt><dd>{r.ageGroup}, {r.classSize} students</dd></div>
@@ -44,6 +45,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <div><dt>Framework</dt><dd>{FRAMEWORK_INFO[r.framework].name}</dd></div>
         {plan.source === 'ai' && <div><dt>Written by</dt><dd>Claude</dd></div>}
       </dl>
+      <Timeline stages={plan.stages} />
 
       <section>
         <h3>Aims</h3>
