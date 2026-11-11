@@ -8,7 +8,7 @@
   --surface-sunk: #f0ebe0;
   --ink: #17231f;
   --ink-2: #44514c;
-  --ink-3: #5c6863;
+  --ink-3: #4f5b56;
   --line: #e3dccd;
   --line-strong: #cfc6b3;
   --brand: #1f5c4d;
@@ -98,7 +98,7 @@ button {
 }
 button:hover:not(:disabled) { background: var(--brand-strong); border-color: var(--brand-strong); }
 button:active:not(:disabled) { transform: translateY(1px); }
-button:disabled { opacity: 0.55; cursor: not-allowed; }
+button:disabled { cursor: not-allowed; background: var(--surface-sunk); border-color: var(--line); color: var(--ink-3); box-shadow: none; }
 button.secondary { background: var(--surface); color: var(--brand); border-color: var(--line-strong); }
 button.secondary:hover:not(:disabled) { background: var(--brand-soft); border-color: var(--brand); }
 button.danger { background: var(--surface); color: var(--danger); border-color: var(--line-strong); }
@@ -136,6 +136,7 @@ input, select, textarea {
   background: #fff; color: var(--ink); width: 100%;
 }
 textarea { resize: vertical; }
+::placeholder { color: #6b7570; opacity: 1; }
 .mono { font-family: var(--font-mono); font-size: var(--text-sm); letter-spacing: 0.02em; }
 .input-group { --pad: 4px; display: flex; align-items: center; gap: var(--s-1); padding: var(--pad); border: 1px solid var(--line-strong); border-radius: var(--r-md); background: #fff; }
 .input-group:focus-within { outline: 3px solid #7fb9a7; outline-offset: 1px; }
