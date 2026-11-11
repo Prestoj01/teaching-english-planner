@@ -18,6 +18,9 @@
   --warn: #8f4c00;
   --warn-soft: #fbeedb;
   --danger: #a4241c;
+  --accent: #e9a23b;
+  --accent-soft: #fcebc9;
+  --accent-ink: #5a3500;
   --chalk: #1e2d28;
   --chalk-ink: #eef4f1;
 
@@ -70,6 +73,7 @@ h1, h2 { font-family: var(--font-serif); font-weight: 600; letter-spacing: -0.01
 h2 { font-size: var(--text-2xl); }
 h3 { font-size: var(--text-lg); margin-top: var(--s-6); }
 h4 { font-size: var(--text-sm); margin-top: var(--s-4); color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
+::selection { background: var(--accent-soft); color: var(--accent-ink); }
 a { color: var(--brand); text-underline-offset: 0.18em; }
 
 .app { max-width: 1160px; margin: 0 auto; padding: var(--s-6) var(--s-5); }
@@ -79,7 +83,8 @@ header { display: flex; flex-wrap: wrap; gap: var(--s-4); justify-content: space
 .brand { display: flex; gap: var(--s-3); align-items: center; }
 .brand h1 { font-size: var(--text-xl); margin: 0; }
 .brand p { margin: 0; color: var(--ink-3); font-size: var(--text-sm); }
-.logo { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); background: var(--brand); color: var(--brand-ink); font-family: var(--font-serif); font-size: var(--text-xl); }
+.logo { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); background: var(--brand); color: var(--brand-ink); font-family: var(--font-serif); font-size: var(--text-xl); position: relative; }
+.logo::after { content: ''; position: absolute; right: 7px; bottom: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 nav { display: flex; gap: var(--s-1); flex-wrap: wrap; }
 
 /* ─── Buttons ─── */
@@ -135,8 +140,10 @@ textarea { resize: vertical; }
 .meta div { display: flex; gap: var(--s-1); }
 .meta dt { color: var(--ink-3); }
 .meta dd { margin: 0; font-weight: 600; }
+.highlight { background: linear-gradient(transparent 58%, var(--accent-soft) 58%, var(--accent-soft) 92%, transparent 92%); padding: 0 0.08em; }
 .title-input { font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 600; margin-bottom: var(--s-2); }
 .plan section { border-top: 1px solid var(--line); padding-top: var(--s-2); }
+.plan li::marker { color: var(--accent-ink); }
 .plan ul, .plan ol { margin: var(--s-1) 0 var(--s-2); padding-left: var(--s-5); }
 .tla p { margin: var(--s-1) 0; }
 
