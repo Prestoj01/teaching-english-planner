@@ -55,7 +55,7 @@ export function Settings({ settings, onSave }: Props) {
         >
           Remove key
         </button>
-        {saved && <span className="hint">Saved.</span>}
+        {saved && <span className="hint confirm" role="status"><Icon name="check" size={14} /> Saved</span>}
       </div>
     </section>
   )

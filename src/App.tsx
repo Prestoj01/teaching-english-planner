@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { About } from './components/About'
 import { DEFAULT_REQUEST, LessonForm } from './components/LessonForm'
 import { Library } from './components/Library'
@@ -29,6 +29,15 @@ export default function App() {
   const [variant, setVariant] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const planRef = useRef<HTMLDivElement>(null)
+  // Bumped on every fresh generation so the plan replays its entrance animation.
+  const [generation, setGeneration] = useState(0)
+
+  /** After generating, bring the new plan into view so the teacher sees that something happened. */
+  function revealPlan() {
+    setGeneration((g) => g + 1)
+    requestAnimationFrame(() => planRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
 
   useEffect(() => savePlans(plans), [plans])
 
@@ -41,6 +50,7 @@ export default function App() {
       setVariant(0)
       setCurrent(toPlan(generateTemplatePlan(req, 0), req, 'template'))
       setDirty(true)
+      revealPlan()
       return
     }
     setBusy(true)
@@ -50,6 +60,7 @@ export default function App() {
       const content = await ai.generateAiPlan(req, settings.apiKey, settings.model)
       setCurrent(toPlan(content, req, 'ai'))
       setDirty(true)
+      revealPlan()
     } catch (e) {
       setError(ai.describeAiError(e))
     } finally {
@@ -64,6 +75,7 @@ export default function App() {
     setVariant(v)
     setCurrent({ ...toPlan(generateTemplatePlan(current.request, v), current.request, 'template'), id: current.id })
     setDirty(true)
+    setGeneration((g) => g + 1)
   }
 
   function saveCurrent() {
@@ -118,9 +130,11 @@ export default function App() {
                 <strong>Example:</strong> this is the plan the inputs above produce. Change them and press Generate plan to make your own.
               </p>
             )}
+            <div ref={planRef} className="plan-anchor" />
             {busy && <PlanSkeleton />}
             {current && !busy && (
               <PlanView
+                key={generation}
                 plan={current}
                 saved={isSaved}
                 onChange={(p) => { setCurrent(p); setDirty(true); setIsExample(false) }}

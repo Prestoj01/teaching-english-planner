@@ -57,7 +57,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
           hidden
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImport(f); e.target.value = '' }}
         />
-        {message && <span className="hint">{message}</span>}
+        {message && <span key={message} className="hint confirm" role="status">{message}</span>}
       </div>
 
       {shown.length === 0 ? (

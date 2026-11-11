@@ -28,7 +28,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
     <article className="card plan">
       <div className="toolbar no-print">
         <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
-        <button onClick={onSave} disabled={saved}><Icon name={saved ? 'check' : 'bookmark'} /> {saved ? 'Saved' : 'Save'}</button>
+        <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'pop' : undefined}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
         {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
         <button className="secondary" onClick={() => window.print()}><Icon name="printer" /> Print</button>
         <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
@@ -78,7 +78,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
       <section>
         <h3>
           Procedure{' '}
-          <span className={`timing ${total === r.durationMinutes ? 'ok' : 'warn'}`}>
+          <span key={total} className={`timing ${total === r.durationMinutes ? 'ok' : 'warn'} flash`} aria-live="polite">
             {total} / {r.durationMinutes} min
           </span>
         </h3>

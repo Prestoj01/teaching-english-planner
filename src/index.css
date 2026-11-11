@@ -221,6 +221,24 @@ th { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; let
 .bone.bar { height: 56px; margin: var(--s-3) 0 var(--s-5); border-radius: var(--r-md); }
 @keyframes shimmer { from { background-position: 100% 0; } to { background-position: -50% 0; } }
 
+/* ─── Feedback motion: every animation here confirms something the teacher just did ─── */
+.plan { animation: rise 320ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+.plan-anchor { scroll-margin-top: var(--s-4); }
+.pop { display: inline-flex; animation: pop 360ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes pop { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.timing.flash { animation: flash 600ms ease-out; }
+@keyframes flash { 0% { box-shadow: 0 0 0 0 var(--accent); } 100% { box-shadow: 0 0 0 8px transparent; } }
+.timing.warn.flash { animation: flash 600ms ease-out, nudge 300ms ease-in-out; }
+@keyframes nudge { 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+.seg { transition: flex-grow 260ms ease; }
+.confirm { display: inline-flex; align-items: center; gap: var(--s-1); animation: fade-in 220ms ease-out; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(2px); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+  .spinner { animation: spin 1.4s linear infinite !important; }
+}
+
 /* ─── Library ─── */
 .library-head { display: flex; gap: var(--s-4); flex-wrap: wrap; justify-content: space-between; align-items: center; }
 .library-head input { max-width: 320px; }
