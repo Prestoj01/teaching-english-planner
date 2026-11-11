@@ -147,8 +147,8 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
 
       {error && <p className="error" role="alert">{error}</p>}
 
-      <div className="actions">
-        <button type="submit" disabled={busy}>Generate plan</button>
+      <div className="actions cta-row">
+        <button type="submit" className="cta" disabled={busy}>Generate plan <span aria-hidden="true">→</span></button>
         <button
           type="button"
           className="secondary"
