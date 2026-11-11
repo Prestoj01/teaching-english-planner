@@ -126,8 +126,6 @@ textarea { resize: vertical; }
 
 /* ─── Plan ─── */
 .toolbar { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; margin-bottom: var(--s-5); }
-.badge { margin-left: auto; font-size: var(--text-xs); padding: 0.15rem var(--s-3); border-radius: var(--r-pill); background: var(--brand-soft); color: var(--brand); }
-.badge.ai { background: #efe7fb; color: #5b3b9a; }
 .meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0 0 var(--s-4); }
 .meta div { display: flex; gap: var(--s-1); }
 .meta dt { color: var(--ink-3); }

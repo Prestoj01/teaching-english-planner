@@ -32,7 +32,6 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
           Download .md
         </button>
-        <span className={`badge ${plan.source}`}>{plan.source === 'ai' ? 'AI-generated' : 'Template'}</span>
       </div>
 
       <Text editing={editing} value={plan.title} onChange={(v) => set('title', v)} as="h2" />
@@ -42,6 +41,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         {r.learnerL1 && <div><dt>L1</dt><dd>{r.learnerL1}</dd></div>}
         <div><dt>Length</dt><dd>{r.durationMinutes} min</dd></div>
         <div><dt>Framework</dt><dd>{FRAMEWORK_INFO[r.framework].name}</dd></div>
+        {plan.source === 'ai' && <div><dt>Written by</dt><dd>Claude</dd></div>}
       </dl>
 
       <section>
