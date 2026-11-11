@@ -32,7 +32,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
   }
 
   return (
-    <section className="card">
+    <section className="card stack">
       <div className="library-head">
         <h2>Your saved lesson plans</h2>
         <input type="search" placeholder="Search by title, topic or level…" value={query} onChange={(e) => setQuery(e.target.value)} />

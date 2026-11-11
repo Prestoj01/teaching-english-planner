@@ -64,81 +64,90 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
     <form className="card form" onSubmit={(e) => { e.preventDefault(); submit('template') }}>
       <h2>Turn a topic into a <span className="highlight">timed, CELTA-style</span> lesson</h2>
 
-      <label className="span-2">
-        Topic / theme
-        <input value={req.topic} onChange={(e) => update('topic', e.target.value)} placeholder="e.g. Food and restaurants" />
-      </label>
+      <fieldset className="group">
+        <legend>What you're teaching</legend>
+        <label className="span-2">
+          Topic
+          <input value={req.topic} onChange={(e) => update('topic', e.target.value)} placeholder="e.g. Food and restaurants" />
+        </label>
 
-      <label className="span-2">
-        Target language <span className="hint">grammar point, vocabulary set or function</span>
-        <input
-          value={req.targetLanguage}
-          onChange={(e) => update('targetLanguage', e.target.value)}
-          placeholder='e.g. "comparatives", "ordering food", "phrasal verbs with get"'
-        />
-      </label>
+        <label className="span-2">
+          Target language <span className="hint">grammar point, vocabulary set or function</span>
+          <input
+            value={req.targetLanguage}
+            onChange={(e) => update('targetLanguage', e.target.value)}
+            placeholder='e.g. "comparatives", "ordering food", "phrasal verbs with get"'
+          />
+        </label>
 
-      <label>
-        CEFR level
-        <select value={req.level} onChange={(e) => update('level', e.target.value as LessonRequest['level'])}>
-          {CEFR_LEVELS.map((l) => <option key={l}>{l}</option>)}
-        </select>
-      </label>
+        <label>
+          Main focus
+          <select value={req.focus} onChange={(e) => update('focus', e.target.value as LessonRequest['focus'])}>
+            {FOCUS_TYPES.map((f) => <option key={f} value={f}>{f[0].toUpperCase() + f.slice(1)}</option>)}
+          </select>
+        </label>
 
-      <label>
-        Learners
-        <select value={req.ageGroup} onChange={(e) => update('ageGroup', e.target.value as LessonRequest['ageGroup'])}>
-          {AGE_GROUPS.map((a) => <option key={a} value={a}>{AGE_LABELS[a]}</option>)}
-        </select>
-      </label>
+        <label>
+          Framework
+          <select
+            value={req.framework}
+            onChange={(e) => { setFrameworkTouched(true); update('framework', e.target.value as LessonRequest['framework']) }}
+          >
+            {FRAMEWORKS.map((f) => <option key={f} value={f}>{f} — {FRAMEWORK_INFO[f].name}</option>)}
+          </select>
+        </label>
 
-      <label>
-        Main focus
-        <select value={req.focus} onChange={(e) => update('focus', e.target.value as LessonRequest['focus'])}>
-          {FOCUS_TYPES.map((f) => <option key={f} value={f}>{f[0].toUpperCase() + f.slice(1)}</option>)}
-        </select>
-      </label>
+        <p className="framework-help span-2">
+          <strong>{fw.name}:</strong> {fw.summary} <span className="best-for">Best for: {fw.bestFor}</span>
+        </p>
+      </fieldset>
 
-      <label>
-        Framework
-        <select
-          value={req.framework}
-          onChange={(e) => { setFrameworkTouched(true); update('framework', e.target.value as LessonRequest['framework']) }}
-        >
-          {FRAMEWORKS.map((f) => <option key={f} value={f}>{f} — {FRAMEWORK_INFO[f].name}</option>)}
-        </select>
-      </label>
+      <fieldset className="group">
+        <legend>Who's in the room</legend>
+        <label>
+          CEFR level
+          <select value={req.level} onChange={(e) => update('level', e.target.value as LessonRequest['level'])}>
+            {CEFR_LEVELS.map((l) => <option key={l}>{l}</option>)}
+          </select>
+        </label>
 
-      <p className="framework-help span-2">
-        <strong>{fw.name}:</strong> {fw.summary} <span className="best-for">Best for: {fw.bestFor}</span>
-      </p>
+        <label>
+          Learners
+          <select value={req.ageGroup} onChange={(e) => update('ageGroup', e.target.value as LessonRequest['ageGroup'])}>
+            {AGE_GROUPS.map((a) => <option key={a} value={a}>{AGE_LABELS[a]}</option>)}
+          </select>
+        </label>
 
-      <label>
-        Length (minutes)
-        <input type="number" min={15} max={180} step={5} value={req.durationMinutes} onChange={(e) => update('durationMinutes', Number(e.target.value))} />
-      </label>
+        <label>
+          Class size
+          <input type="number" min={1} max={60} value={req.classSize} onChange={(e) => update('classSize', Number(e.target.value))} />
+        </label>
 
-      <label>
-        Class size
-        <input type="number" min={1} max={60} value={req.classSize} onChange={(e) => update('classSize', Number(e.target.value))} />
-      </label>
+        <label>
+          First language <span className="hint">predicts common mistakes</span>
+          <input list="l1-options" value={req.learnerL1} onChange={(e) => update('learnerL1', e.target.value)} placeholder="e.g. Japanese" />
+          <datalist id="l1-options">
+            {L1_OPTIONS.map((l) => <option key={l} value={l} />)}
+          </datalist>
+        </label>
+      </fieldset>
 
-      <label className="span-2">
-        Learners' first language <span className="hint">used to predict common mistakes</span>
-        <input list="l1-options" value={req.learnerL1} onChange={(e) => update('learnerL1', e.target.value)} placeholder="e.g. Japanese" />
-        <datalist id="l1-options">
-          {L1_OPTIONS.map((l) => <option key={l} value={l} />)}
-        </datalist>
-      </label>
+      <fieldset className="group">
+        <legend>Shape of the lesson</legend>
+        <label>
+          Length (minutes)
+          <input type="number" min={15} max={180} step={5} value={req.durationMinutes} onChange={(e) => update('durationMinutes', Number(e.target.value))} />
+        </label>
 
-      <label className="span-2">
-        Notes <span className="hint">optional: constraints, materials, goals</span>
-        <textarea rows={2} value={req.notes} onChange={(e) => update('notes', e.target.value)} placeholder="e.g. Online class on Zoom, no printing. Students are preparing for job interviews." />
-      </label>
+        <label className="span-3">
+          Notes <span className="hint">optional: constraints, materials, goals</span>
+          <textarea rows={2} value={req.notes} onChange={(e) => update('notes', e.target.value)} placeholder="e.g. Online class on Zoom, no printing. Students are preparing for job interviews." />
+        </label>
+      </fieldset>
 
-      {error && <p className="error span-2" role="alert">{error}</p>}
+      {error && <p className="error" role="alert">{error}</p>}
 
-      <div className="actions span-2">
+      <div className="actions">
         <button type="submit" disabled={busy}>Generate plan</button>
         <button
           type="button"
