@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from './Icon'
 import { AI_MODELS, type AiModelId } from '../ai/models'
 import type { Settings as SettingsType } from '../storage'
 
@@ -35,7 +36,7 @@ export function Settings({ settings, onSave }: Props) {
             onChange={(e) => { setDraft({ ...draft, apiKey: e.target.value.trim() }); setSaved(false) }}
             placeholder="sk-ant-…"
           />
-          <button type="button" className="secondary small" onClick={() => setShow((s) => !s)}>{show ? 'Hide' : 'Show'}</button>
+          <button type="button" className="secondary small" onClick={() => setShow((s) => !s)}><Icon name={show ? 'eyeOff' : 'eye'} size={14} /> {show ? 'Hide' : 'Show'}</button>
         </div>
       </label>
 

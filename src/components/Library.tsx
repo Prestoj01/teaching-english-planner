@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { downloadFile } from '../export'
+import { Icon } from './Icon'
 import { parseImport } from '../storage'
 import type { LessonPlan } from '../schema'
 
@@ -46,9 +47,9 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
           disabled={plans.length === 0}
           onClick={() => downloadFile(`esl-lessons-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(plans, null, 2), 'application/json')}
         >
-          Export
+          <Icon name="download" /> Export
         </button>
-        <button className="secondary" onClick={() => fileInput.current?.click()}>Import</button>
+        <button className="secondary" onClick={() => fileInput.current?.click()}><Icon name="upload" /> Import</button>
         <input
           ref={fileInput}
           type="file"
@@ -72,12 +73,12 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
                 </span>
               </button>
               <div className="row-actions">
-                <button className="secondary small" onClick={() => onDuplicate(p)}>Duplicate</button>
+                <button className="secondary small" onClick={() => onDuplicate(p)}><Icon name="copy" size={14} /> Duplicate</button>
                 <button
                   className="danger small"
                   onClick={() => { if (confirm(`Delete "${p.title}"?`)) onDelete(p.id) }}
                 >
-                  Delete
+                  <Icon name="trash" size={14} /> Delete
                 </button>
               </div>
             </li>

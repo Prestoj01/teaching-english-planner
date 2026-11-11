@@ -92,6 +92,7 @@ button {
   font: inherit; font-weight: 600; font-size: var(--text-sm); cursor: pointer;
   border: 1px solid var(--brand); background: var(--brand); color: var(--brand-ink);
   padding: var(--s-2) var(--s-4); border-radius: var(--r-md);
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
   transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, transform 80ms ease;
 }
 button:hover:not(:disabled) { background: var(--brand-strong); border-color: var(--brand-strong); }
@@ -102,14 +103,15 @@ button.secondary:hover:not(:disabled) { background: var(--brand-soft); border-co
 button.danger { background: var(--surface); color: var(--danger); border-color: var(--line-strong); }
 button.danger:hover:not(:disabled) { background: #fbe9e7; border-color: var(--danger); }
 button.cta { font-size: var(--text-md); padding: var(--s-3) var(--s-6); min-height: 48px; box-shadow: var(--shadow-2); }
-button.cta span { display: inline-block; transition: transform 160ms ease; }
-button.cta:hover:not(:disabled) span { transform: translateX(3px); }
+.icon { flex: none; }
+button.cta .icon { transition: transform 160ms ease; }
+button.cta:hover:not(:disabled) .icon { transform: translateX(3px); }
 .cta-row { padding-top: var(--s-5); border-top: 1px solid var(--line); gap: var(--s-3); }
 button.small { padding: var(--s-1) var(--s-3); font-size: var(--text-xs); }
 button.tab { background: transparent; color: var(--ink-2); border-color: transparent; }
 button.tab:hover:not(:disabled) { background: var(--surface-sunk); border-color: transparent; }
 button.tab.active { background: var(--brand-soft); color: var(--brand); border-color: var(--brand-soft); }
-button.link { background: none; border: none; color: inherit; padding: 0; text-align: left; display: flex; flex-direction: column; font-weight: 400; font-size: inherit; }
+button.link { background: none; border: none; color: inherit; padding: 0; text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: 0; font-weight: 400; font-size: inherit; }
 button.link:hover:not(:disabled) { background: none; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #7fb9a7; outline-offset: 1px; }
 

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from './Icon'
 import { FRAMEWORK_INFO } from '../data/frameworks'
 import { downloadFile, planToMarkdown, slugify } from '../export'
 import { INTERACTIONS, type Interaction, type LessonPlan, type Stage } from '../schema'
@@ -25,12 +26,12 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
   return (
     <article className="card plan">
       <div className="toolbar no-print">
-        <button onClick={() => setEditing((e) => !e)}>{editing ? 'Done editing' : 'Edit'}</button>
-        <button onClick={onSave} disabled={saved}>{saved ? 'Saved ✓' : 'Save'}</button>
-        {onRegenerate && <button className="secondary" onClick={onRegenerate}>Try different activities</button>}
-        <button className="secondary" onClick={() => window.print()}>Print</button>
+        <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
+        <button onClick={onSave} disabled={saved}><Icon name={saved ? 'check' : 'bookmark'} /> {saved ? 'Saved' : 'Save'}</button>
+        {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
+        <button className="secondary" onClick={() => window.print()}><Icon name="printer" /> Print</button>
         <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
-          Download .md
+          <Icon name="download" /> Download .md
         </button>
       </div>
 

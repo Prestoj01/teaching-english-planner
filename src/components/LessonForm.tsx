@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from './Icon'
 import { FRAMEWORK_INFO, suggestFramework } from '../data/frameworks'
 import { L1_OPTIONS } from '../data/l1Notes'
 import {
@@ -148,7 +149,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
       {error && <p className="error" role="alert">{error}</p>}
 
       <div className="actions cta-row">
-        <button type="submit" className="cta" disabled={busy}>Generate plan <span aria-hidden="true">→</span></button>
+        <button type="submit" className="cta" disabled={busy}>Generate plan <Icon name="arrowRight" /></button>
         <button
           type="button"
           className="secondary"
@@ -156,7 +157,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
           title={aiAvailable ? 'Uses your own Claude API key' : 'Add your API key in Settings to enable'}
           onClick={() => submit('ai')}
         >
-          {busy ? 'Generating…' : '✨ Generate with AI'}
+          <Icon name="sparkle" /> {busy ? 'Generating…' : 'Generate with AI'}
         </button>
         {!aiAvailable && <span className="hint">Add an API key in Settings to use AI.</span>}
       </div>
