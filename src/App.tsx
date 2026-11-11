@@ -3,6 +3,7 @@ import { About } from './components/About'
 import { DEFAULT_REQUEST, LessonForm } from './components/LessonForm'
 import { Library } from './components/Library'
 import { PlanView } from './components/PlanView'
+import { PlanSkeleton } from './components/PlanSkeleton'
 import { Settings } from './components/Settings'
 import { generateTemplatePlan } from './generator/templateGenerator'
 import type { LessonContent, LessonPlan, LessonRequest } from './schema'
@@ -112,12 +113,13 @@ export default function App() {
               />
               {error && <p className="error card" role="alert">{error}</p>}
             </div>
-            {current && isExample && (
+            {current && isExample && !busy && (
               <p className="example-note no-print">
                 <strong>Example:</strong> this is the plan the inputs above produce. Change them and press Generate plan to make your own.
               </p>
             )}
-            {current && (
+            {busy && <PlanSkeleton />}
+            {current && !busy && (
               <PlanView
                 plan={current}
                 saved={isSaved}

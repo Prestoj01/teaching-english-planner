@@ -154,10 +154,11 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
           type="button"
           className="secondary"
           disabled={busy || !aiAvailable}
+          aria-busy={busy}
           title={aiAvailable ? 'Uses your own Claude API key' : 'Add your API key in Settings to enable'}
           onClick={() => submit('ai')}
         >
-          <Icon name="sparkle" /> {busy ? 'Generating…' : 'Generate with AI'}
+          {busy ? <span className="spinner" aria-hidden="true" /> : <Icon name="sparkle" />} {busy ? 'Writing your plan…' : 'Generate with AI'}
         </button>
         {!aiAvailable && <span className="hint">Add an API key in Settings to use AI.</span>}
       </div>
