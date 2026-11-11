@@ -163,6 +163,8 @@ textarea { resize: vertical; }
 .stages td:nth-child(2) { text-align: right; padding-right: var(--s-4); }
 
 /* ─── Plan ─── */
+.example-note { margin: var(--s-8) 0 var(--s-3); color: var(--ink-2); font-size: var(--text-sm); display: flex; align-items: center; gap: var(--s-2); }
+.example-note::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
 .toolbar { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; margin-bottom: var(--s-5); }
 .meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0 0 var(--s-4); }
 .meta div { display: flex; gap: var(--s-1); }

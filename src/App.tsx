@@ -19,8 +19,12 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('plan')
   const [plans, setPlans] = useState<LessonPlan[]>(loadPlans)
   const [settings, setSettings] = useState<SettingsType>(loadSettings)
-  const [current, setCurrent] = useState<LessonPlan | null>(null)
-  const [dirty, setDirty] = useState(false)
+  // First-time visitors see a real plan built from the default inputs, so the product explains itself.
+  const [current, setCurrent] = useState<LessonPlan | null>(() =>
+    loadPlans().length === 0 ? toPlan(generateTemplatePlan(DEFAULT_REQUEST, 0), DEFAULT_REQUEST, 'template') : null,
+  )
+  const [isExample, setIsExample] = useState(() => current !== null)
+  const [dirty, setDirty] = useState(true)
   const [variant, setVariant] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -31,6 +35,7 @@ export default function App() {
 
   async function generate(req: LessonRequest, mode: 'template' | 'ai') {
     setError('')
+    setIsExample(false)
     if (mode === 'template') {
       setVariant(0)
       setCurrent(toPlan(generateTemplatePlan(req, 0), req, 'template'))
@@ -53,6 +58,7 @@ export default function App() {
 
   function regenerate() {
     if (!current) return
+    setIsExample(false)
     const v = variant + 1
     setVariant(v)
     setCurrent({ ...toPlan(generateTemplatePlan(current.request, v), current.request, 'template'), id: current.id })
@@ -68,6 +74,7 @@ export default function App() {
   }
 
   function open(plan: LessonPlan) {
+    setIsExample(false)
     setCurrent(plan)
     setDirty(false)
     setTab('plan')
@@ -105,11 +112,16 @@ export default function App() {
               />
               {error && <p className="error card" role="alert">{error}</p>}
             </div>
+            {current && isExample && (
+              <p className="example-note no-print">
+                <strong>Example:</strong> this is the plan the inputs above produce. Change them and press Generate plan to make your own.
+              </p>
+            )}
             {current && (
               <PlanView
                 plan={current}
                 saved={isSaved}
-                onChange={(p) => { setCurrent(p); setDirty(true) }}
+                onChange={(p) => { setCurrent(p); setDirty(true); setIsExample(false) }}
                 onSave={saveCurrent}
                 onRegenerate={current.source === 'template' ? regenerate : undefined}
               />
