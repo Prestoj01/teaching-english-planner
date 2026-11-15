@@ -1,5 +1,6 @@
 import { Doodle } from './Doodle'
 import { Greeting } from './Greeting'
+import { tiltHandlers } from '../useTilt'
 
 /** The Plan tab's opening: a headline on the left, a little desk collage on the right. */
 export function Hero() {
@@ -16,7 +17,7 @@ export function Hero() {
         </p>
       </div>
 
-      <div className="hero-collage" aria-hidden="true">
+      <div className="hero-collage" aria-hidden="true" {...tiltHandlers(8)}>
         <div className="index-card">
           <span className="tape" />
           <p className="hand index-title">Lesson 4 · A2 adults</p>

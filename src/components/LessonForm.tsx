@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Icon } from './Icon'
+import { tiltHandlers } from '../useTilt'
 import { FRAMEWORK_INFO, suggestFramework } from '../data/frameworks'
 import { L1_OPTIONS } from '../data/l1Notes'
 import {
@@ -97,7 +98,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
           </select>
         </label>
 
-        <p className="framework-help sticky-note span-2">
+        <p className="framework-help sticky-note span-2" {...tiltHandlers(5)}>
           <strong className="hand sticky-title">{fw.name}</strong> {fw.summary} <span className="best-for">Best for: {fw.bestFor}</span>
         </p>
       </fieldset>
