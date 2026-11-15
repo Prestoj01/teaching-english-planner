@@ -4,6 +4,7 @@ import { DEFAULT_REQUEST, LessonForm } from './components/LessonForm'
 import { Library } from './components/Library'
 import { PlanView } from './components/PlanView'
 import { Hero } from './components/Hero'
+import { Marquee } from './components/Marquee'
 import { PlanSkeleton } from './components/PlanSkeleton'
 import { Settings } from './components/Settings'
 import { generateTemplatePlan } from './generator/templateGenerator'
@@ -117,6 +118,7 @@ export default function App() {
         {tab === 'plan' && (
           <>
             <Hero />
+            <Marquee />
             <div className="no-print">
               <LessonForm
                 key={current?.id ?? 'new'}
