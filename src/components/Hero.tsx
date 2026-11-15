@@ -1,3 +1,5 @@
+import { Doodle } from './Doodle'
+
 /** The Plan tab's opening: a headline on the left, a little desk collage on the right. */
 export function Hero() {
   return (
@@ -26,6 +28,8 @@ export function Hero() {
           </ol>
         </div>
         <div className="sticky hand">don't forget the CCQs!</div>
+        <Doodle name="apple" size={64} className="hero-apple" />
+        <Doodle name="plane" size={56} className="hero-plane" />
       </div>
     </section>
   )

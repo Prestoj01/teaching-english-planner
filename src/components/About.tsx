@@ -1,10 +1,11 @@
+import { Doodle } from './Doodle'
 import { FRAMEWORK_INFO } from '../data/frameworks'
 import { FRAMEWORKS } from '../schema'
 
 export function About() {
   return (
     <section className="card prose">
-      <h2>A lesson planner that costs nothing to run</h2>
+      <h2 className="doodle-head"><Doodle name="globe" size={52} />A lesson planner that costs nothing to run</h2>
       <p>
         Hello Class helps English teachers turn a topic and a target language into a full lesson plan in a
         familiar CELTA-style format: aims, language analysis with concept-check questions, timed stages with interaction

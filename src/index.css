@@ -155,6 +155,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .scribble path { fill: none; stroke: var(--tomato-bright); stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 @media (max-width: 560px) { .scribble { white-space: normal; } .scribble svg { display: none; } }
 
+/* Doodles */
+.doodle { flex: none; overflow: visible; }
+.doodle-head { display: flex; align-items: center; gap: var(--s-3); }
+.doodle-head .doodle { margin: -6px 0 -6px -4px; }
+.empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--s-10) 0; color: var(--ink-2); }
+.empty p { font-size: var(--text-xl); margin: var(--s-3) 0 0; }
+.hero-apple { position: absolute; left: 8%; top: 12%; transform: rotate(-12deg); }
+.hero-plane { position: absolute; right: 0; bottom: -6%; transform: rotate(8deg); }
+
 /* Hero */
 .hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--s-8); align-items: center; margin: var(--s-4) 0 var(--s-12); }
 .eyebrow { margin: 0 0 var(--s-1); font-size: var(--text-2xl); color: var(--tomato); line-height: 1; }
