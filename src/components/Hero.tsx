@@ -1,11 +1,12 @@
 import { Doodle } from './Doodle'
+import { Greeting } from './Greeting'
 
 /** The Plan tab's opening: a headline on the left, a little desk collage on the right. */
 export function Hero() {
   return (
     <section className="hero no-print">
       <div className="hero-copy">
-        <p className="eyebrow hand">Hello, class!</p>
+        <Greeting />
         <h2 className="hero-title">
           Turn a topic into a <Scribble>timed, CELTA-style</Scribble> lesson in seconds.
         </h2>
