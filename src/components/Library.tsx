@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { downloadFile } from '../export'
+import { Doodle } from './Doodle'
 import { Icon } from './Icon'
 import { parseImport } from '../storage'
 import type { LessonPlan } from '../schema'
@@ -61,11 +62,14 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
       </div>
 
       {shown.length === 0 ? (
-        <p className="empty">{plans.length === 0 ? 'No saved lessons yet. Plan one and press "Save".' : 'No lessons match your search.'}</p>
+        <div className="empty">
+          <Doodle name="plane" size={88} className="float" />
+          <p className="hand">{plans.length === 0 ? 'Nothing saved yet. Plan a lesson and press Save.' : 'No lessons match that search.'}</p>
+        </div>
       ) : (
         <ul className="lesson-list">
           {shown.map((p) => (
-            <li key={p.id}>
+            <li key={p.id} className="reveal">
               <button className="link" onClick={() => onOpen(p)}>
                 <strong>{p.title}</strong>
                 <span className="hint lesson-meta">

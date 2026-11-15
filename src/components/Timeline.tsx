@@ -14,13 +14,13 @@ export function Timeline({ stages }: { stages: Stage[] }) {
   const total = stages.reduce((a, s) => a + s.minutes, 0) || 1
   const studentMinutes = stages.filter((s) => TALK[s.interaction].kind !== 'teacher').reduce((a, s) => a + s.minutes, 0)
   return (
-    <figure className="timeline">
+    <figure className="timeline reveal">
       <ol aria-label="Lesson timeline">
         {stages.map((s, i) => (
           <li
             key={i}
             className={`seg talk-${TALK[s.interaction].kind}`}
-            style={{ flexGrow: Math.max(s.minutes, 0.5) }}
+            style={{ flexGrow: Math.max(s.minutes, 0.5), '--i': i } as React.CSSProperties}
             title={`${s.name} · ${s.minutes} min · ${TALK[s.interaction].label}`}
           >
             <span className="seg-name">{s.name.split(':')[0]}</span>

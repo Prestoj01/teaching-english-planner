@@ -3,10 +3,13 @@ import { About } from './components/About'
 import { DEFAULT_REQUEST, LessonForm } from './components/LessonForm'
 import { Library } from './components/Library'
 import { PlanView } from './components/PlanView'
+import { Hero } from './components/Hero'
+import { Marquee } from './components/Marquee'
 import { PlanSkeleton } from './components/PlanSkeleton'
 import { Settings } from './components/Settings'
 import { generateTemplatePlan } from './generator/templateGenerator'
 import type { LessonContent, LessonPlan, LessonRequest } from './schema'
+import { useReveal } from './useReveal'
 import { loadPlans, loadSettings, newId, savePlans, saveSettings, type Settings as SettingsType } from './storage'
 
 type Tab = 'plan' | 'library' | 'settings' | 'about'
@@ -40,6 +43,7 @@ export default function App() {
   }
 
   useEffect(() => savePlans(plans), [plans])
+  useReveal()
 
   const isSaved = !!current && !dirty && plans.some((p) => p.id === current.id)
 
@@ -97,10 +101,10 @@ export default function App() {
     <div className="app">
       <header className="no-print">
         <div className="brand">
-          <span className="logo">Aa</span>
+          <span className="logo" aria-hidden="true">Hi</span>
           <div>
-            <h1>ESL Lesson Planner</h1>
-            <p>Free lesson plans for English teachers, with CEFR levels, proven frameworks and first-language tips.</p>
+            <h1>Hello Class</h1>
+            <p className="hand tagline">free lesson plans for English teachers</p>
           </div>
         </div>
         <nav>
@@ -115,6 +119,8 @@ export default function App() {
       <main>
         {tab === 'plan' && (
           <>
+            <Hero />
+            <Marquee />
             <div className="no-print">
               <LessonForm
                 key={current?.id ?? 'new'}
@@ -126,8 +132,8 @@ export default function App() {
               {error && <p className="error card" role="alert">{error}</p>}
             </div>
             {current && isExample && !busy && (
-              <p className="example-note no-print">
-                <strong>Example:</strong> this is the plan the inputs above produce. Change them and press Generate plan to make your own.
+              <p className="example-note hand no-print">
+                Here's an example: the plan the form above makes. Change it and press Generate to make your own.
               </p>
             )}
             <div ref={planRef} className="plan-anchor" />
@@ -170,8 +176,8 @@ export default function App() {
       </main>
 
       <footer className="no-print">
-        Free and open source ·{' '}
-        <a href="https://github.com/Prestoj01/teaching-english-planner" target="_blank" rel="noreferrer">GitHub</a>
+        Made by <a href="https://github.com/Prestoj01" target="_blank" rel="noreferrer">Preston</a> · Free and open source ·{' '}
+        <a href="https://github.com/Prestoj01/teaching-english-planner" target="_blank" rel="noreferrer">Source code</a>
       </footer>
     </div>
   )

@@ -1,4 +1,6 @@
-# ESL Lesson Planner
+# Hello Class
+
+*A free ESL lesson planner, made by [Preston](https://github.com/Prestoj01).*
 
 A free, open-source lesson planner for teachers of English as a second or foreign language (ESL/EFL).
 

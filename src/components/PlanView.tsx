@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Doodle } from './Doodle'
 import { Icon } from './Icon'
 import { Timeline } from './Timeline'
 import { FRAMEWORK_INFO } from '../data/frameworks'
@@ -25,7 +26,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
   const setTla = (patch: Partial<typeof tla>) => set('targetLanguageAnalysis', { ...tla, ...patch })
 
   return (
-    <article className="card plan">
+    <article className="card plan taped taped-right">
       <div className="toolbar no-print">
         <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
         <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
@@ -47,8 +48,8 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
       </dl>
       <Timeline stages={plan.stages} />
 
-      <section>
-        <h3>Aims</h3>
+      <section className="reveal">
+        <h3 className="doodle-head"><Doodle name="target" size={36} />Aims</h3>
         <p><strong>Main aim: </strong><Text editing={editing} value={plan.mainAim} onChange={(v) => set('mainAim', v)} /></p>
         <h4>Subsidiary aims</h4>
         <List editing={editing} items={plan.subsidiaryAims} onChange={(v) => set('subsidiaryAims', v)} />
@@ -56,8 +57,8 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <List editing={editing} items={plan.learningOutcomes} onChange={(v) => set('learningOutcomes', v)} />
       </section>
 
-      <section>
-        <h3>Target language analysis</h3>
+      <section className="reveal">
+        <h3 className="doodle-head"><Doodle name="bubble" size={36} />Target language analysis</h3>
         <div className="tla">
           <p><strong>Form: </strong><Text editing={editing} value={tla.form} onChange={(v) => setTla({ form: v })} multiline /></p>
           <p><strong>Meaning: </strong><Text editing={editing} value={tla.meaning} onChange={(v) => setTla({ meaning: v })} multiline /></p>
@@ -75,8 +76,9 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         )}
       </section>
 
-      <section>
-        <h3>
+      <section className="reveal">
+        <h3 className="doodle-head">
+          <Doodle name="clock" size={36} />
           Procedure{' '}
           <span key={total} className={`timing ${total === r.durationMinutes ? 'ok' : 'warn'} flash`} aria-live="polite">
             {total} / {r.durationMinutes} min
@@ -123,8 +125,8 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <p className="hint">Interaction: T-Ss = teacher to class, S = individual, S-S = pairs, Groups = small groups.</p>
       </section>
 
-      <section>
-        <h3>Anticipated problems &amp; solutions</h3>
+      <section className="reveal">
+        <h3 className="doodle-head"><Doodle name="bulb" size={36} />Anticipated problems &amp; solutions</h3>
         <table className="problems">
           <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
           <tbody>
@@ -142,18 +144,18 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         </table>
       </section>
 
-      <section className="two-col">
+      <section className="two-col reveal">
         <div>
-          <h3>Support for weaker learners</h3>
+          <h3 className="doodle-head"><Doodle name="arrows" size={36} />Support for weaker learners</h3>
           <List editing={editing} items={plan.differentiation.support} onChange={(v) => set('differentiation', { ...plan.differentiation, support: v })} />
         </div>
         <div>
-          <h3>Stretch for stronger learners</h3>
+          <h3 className="doodle-head"><Doodle name="star" size={36} />Stretch for stronger learners</h3>
           <List editing={editing} items={plan.differentiation.stretch} onChange={(v) => set('differentiation', { ...plan.differentiation, stretch: v })} />
         </div>
       </section>
 
-      <section className="two-col">
+      <section className="two-col reveal">
         <div>
           <h3>Board plan</h3>
           {editing ? (
@@ -163,7 +165,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
           )}
         </div>
         <div>
-          <h3>Homework</h3>
+          <h3 className="doodle-head"><Doodle name="house" size={36} />Homework</h3>
           <Text editing={editing} value={plan.homework} onChange={(v) => set('homework', v)} multiline />
         </div>
       </section>
