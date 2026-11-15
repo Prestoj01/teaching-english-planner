@@ -48,7 +48,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
       </dl>
       <Timeline stages={plan.stages} />
 
-      <section>
+      <section className="reveal">
         <h3 className="doodle-head"><Doodle name="target" size={36} />Aims</h3>
         <p><strong>Main aim: </strong><Text editing={editing} value={plan.mainAim} onChange={(v) => set('mainAim', v)} /></p>
         <h4>Subsidiary aims</h4>
@@ -57,7 +57,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <List editing={editing} items={plan.learningOutcomes} onChange={(v) => set('learningOutcomes', v)} />
       </section>
 
-      <section>
+      <section className="reveal">
         <h3 className="doodle-head"><Doodle name="bubble" size={36} />Target language analysis</h3>
         <div className="tla">
           <p><strong>Form: </strong><Text editing={editing} value={tla.form} onChange={(v) => setTla({ form: v })} multiline /></p>
@@ -76,7 +76,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         )}
       </section>
 
-      <section>
+      <section className="reveal">
         <h3 className="doodle-head">
           <Doodle name="clock" size={36} />
           Procedure{' '}
@@ -125,7 +125,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <p className="hint">Interaction: T-Ss = teacher to class, S = individual, S-S = pairs, Groups = small groups.</p>
       </section>
 
-      <section>
+      <section className="reveal">
         <h3 className="doodle-head"><Doodle name="bulb" size={36} />Anticipated problems &amp; solutions</h3>
         <table className="problems">
           <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
@@ -144,7 +144,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         </table>
       </section>
 
-      <section className="two-col">
+      <section className="two-col reveal">
         <div>
           <h3 className="doodle-head"><Doodle name="arrows" size={36} />Support for weaker learners</h3>
           <List editing={editing} items={plan.differentiation.support} onChange={(v) => set('differentiation', { ...plan.differentiation, support: v })} />
@@ -155,7 +155,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         </div>
       </section>
 
-      <section className="two-col">
+      <section className="two-col reveal">
         <div>
           <h3>Board plan</h3>
           {editing ? (

@@ -69,7 +69,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
       ) : (
         <ul className="lesson-list">
           {shown.map((p) => (
-            <li key={p.id}>
+            <li key={p.id} className="reveal">
               <button className="link" onClick={() => onOpen(p)}>
                 <strong>{p.title}</strong>
                 <span className="hint lesson-meta">

@@ -62,7 +62,7 @@ export function LessonForm({ initial, aiAvailable, busy, onGenerate }: Props) {
   const fw = FRAMEWORK_INFO[req.framework]
 
   return (
-    <form className="card form taped" aria-label="Lesson details" onSubmit={(e) => { e.preventDefault(); submit('template') }}>
+    <form className="card form taped reveal" aria-label="Lesson details" onSubmit={(e) => { e.preventDefault(); submit('template') }}>
 
       <fieldset className="group">
         <legend>What you're teaching</legend>

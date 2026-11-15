@@ -9,6 +9,7 @@ import { PlanSkeleton } from './components/PlanSkeleton'
 import { Settings } from './components/Settings'
 import { generateTemplatePlan } from './generator/templateGenerator'
 import type { LessonContent, LessonPlan, LessonRequest } from './schema'
+import { useReveal } from './useReveal'
 import { loadPlans, loadSettings, newId, savePlans, saveSettings, type Settings as SettingsType } from './storage'
 
 type Tab = 'plan' | 'library' | 'settings' | 'about'
@@ -42,6 +43,7 @@ export default function App() {
   }
 
   useEffect(() => savePlans(plans), [plans])
+  useReveal()
 
   const isSaved = !!current && !dirty && plans.some((p) => p.id === current.id)
 
