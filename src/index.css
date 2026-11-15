@@ -26,7 +26,8 @@
 
   /* Type */
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Charter, 'Bitstream Charter', Georgia, serif;
+  --font-serif: 'Fraunces Variable', 'Iowan Old Style', Palatino, Georgia, serif;
+  --font-hand: 'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --text-xs: 0.8125rem;
   --text-sm: 0.875rem;
@@ -68,7 +69,8 @@ h1, h2, h3, h4 { line-height: 1.2; margin: 0 0 var(--s-2); }
 h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; }
 p, li, dd { text-wrap: pretty; }
 h2 { max-width: 28ch; }
-h1, h2 { font-family: var(--font-serif); font-weight: 600; letter-spacing: -0.01em; }
+h1, h2 { font-family: var(--font-serif); font-weight: 650; letter-spacing: -0.015em; font-variation-settings: 'SOFT' 100; }
+.hand { font-family: var(--font-hand); font-weight: 600; }
 h2 { font-size: var(--text-2xl); }
 h3 { font-size: var(--text-lg); margin-top: var(--s-6); }
 h4 { font-size: var(--text-sm); margin-top: var(--s-4); color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
