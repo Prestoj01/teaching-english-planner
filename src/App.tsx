@@ -3,6 +3,7 @@ import { About } from './components/About'
 import { DEFAULT_REQUEST, LessonForm } from './components/LessonForm'
 import { Library } from './components/Library'
 import { PlanView } from './components/PlanView'
+import { Hero } from './components/Hero'
 import { PlanSkeleton } from './components/PlanSkeleton'
 import { Settings } from './components/Settings'
 import { generateTemplatePlan } from './generator/templateGenerator'
@@ -100,7 +101,7 @@ export default function App() {
           <span className="logo" aria-hidden="true">Hi</span>
           <div>
             <h1>Hello Class</h1>
-            <p>Free lesson plans for English teachers, with CEFR levels, proven frameworks and first-language tips.</p>
+            <p className="hand tagline">free lesson plans for English teachers</p>
           </div>
         </div>
         <nav>
@@ -115,6 +116,7 @@ export default function App() {
       <main>
         {tab === 'plan' && (
           <>
+            <Hero />
             <div className="no-print">
               <LessonForm
                 key={current?.id ?? 'new'}
@@ -126,8 +128,8 @@ export default function App() {
               {error && <p className="error card" role="alert">{error}</p>}
             </div>
             {current && isExample && !busy && (
-              <p className="example-note no-print">
-                <strong>Example:</strong> this is the plan the inputs above produce. Change them and press Generate plan to make your own.
+              <p className="example-note hand no-print">
+                Here's an example: the plan the form above makes. Change it and press Generate to make your own.
               </p>
             )}
             <div ref={planRef} className="plan-anchor" />

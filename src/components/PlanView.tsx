@@ -25,7 +25,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
   const setTla = (patch: Partial<typeof tla>) => set('targetLanguageAnalysis', { ...tla, ...patch })
 
   return (
-    <article className="card plan">
+    <article className="card plan taped taped-right">
       <div className="toolbar no-print">
         <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
         <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
