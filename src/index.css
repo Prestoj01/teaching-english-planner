@@ -101,6 +101,7 @@ header { display: flex; flex-wrap: wrap; gap: var(--s-4); justify-content: space
 /* Nav: paper tabs; the active one is a sticky note. */
 nav { display: flex; gap: var(--s-2); flex-wrap: wrap; }
 nav button.tab { border-radius: var(--r-sm); }
+@media (max-width: 560px) { nav { gap: 0; } nav button.tab { padding: var(--s-2) var(--s-3); } }
 
 /* ─── Buttons ─── */
 button {
