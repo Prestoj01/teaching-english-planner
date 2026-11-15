@@ -84,8 +84,9 @@ header { display: flex; flex-wrap: wrap; gap: var(--s-4); justify-content: space
 .brand { display: flex; gap: var(--s-3); align-items: center; }
 .brand h1 { font-size: var(--text-xl); margin: 0; }
 .brand p { margin: 0; color: var(--ink-3); font-size: var(--text-sm); }
-.logo { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); background: var(--brand); color: var(--brand-ink); font-family: var(--font-serif); font-size: var(--text-xl); position: relative; padding-bottom: 2px; }
-.logo::after { content: ''; position: absolute; right: 4px; bottom: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+/* Logo: a speech bubble saying Hi */
+.logo { display: grid; place-items: center; width: 48px; height: 40px; border-radius: var(--r-md); background: var(--brand); color: var(--brand-ink); font-family: var(--font-serif); font-weight: 700; font-size: var(--text-lg); position: relative; margin-bottom: 8px; }
+.logo::after { content: ''; position: absolute; left: 10px; bottom: -8px; border: 5px solid transparent; border-top: 5px solid var(--brand); border-left: 5px solid var(--brand); }
 /* Nested shapes: inner radius = outer radius − padding, so the curves stay concentric. */
 nav { --pad: 4px; display: flex; gap: 2px; flex-wrap: wrap; padding: var(--pad); background: var(--surface-sunk); border: 1px solid var(--line); border-radius: var(--r-lg); }
 nav button.tab { border-radius: calc(var(--r-lg) - var(--pad)); }

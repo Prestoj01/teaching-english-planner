@@ -97,9 +97,9 @@ export default function App() {
     <div className="app">
       <header className="no-print">
         <div className="brand">
-          <span className="logo">Aa</span>
+          <span className="logo" aria-hidden="true">Hi</span>
           <div>
-            <h1>ESL Lesson Planner</h1>
+            <h1>Hello Class</h1>
             <p>Free lesson plans for English teachers, with CEFR levels, proven frameworks and first-language tips.</p>
           </div>
         </div>
@@ -170,8 +170,8 @@ export default function App() {
       </main>
 
       <footer className="no-print">
-        Free and open source ·{' '}
-        <a href="https://github.com/Prestoj01/teaching-english-planner" target="_blank" rel="noreferrer">GitHub</a>
+        Made by <a href="https://github.com/Prestoj01" target="_blank" rel="noreferrer">Preston</a> · Free and open source ·{' '}
+        <a href="https://github.com/Prestoj01/teaching-english-planner" target="_blank" rel="noreferrer">Source code</a>
       </footer>
     </div>
   )

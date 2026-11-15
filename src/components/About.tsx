@@ -6,7 +6,7 @@ export function About() {
     <section className="card prose">
       <h2>A lesson planner that costs nothing to run</h2>
       <p>
-        ESL Lesson Planner helps English teachers turn a topic and a target language into a full lesson plan in a
+        Hello Class helps English teachers turn a topic and a target language into a full lesson plan in a
         familiar CELTA-style format: aims, language analysis with concept-check questions, timed stages with interaction
         patterns, problems to expect from learners' first language, differentiation, a board plan and homework.
       </p>
