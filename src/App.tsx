@@ -12,7 +12,14 @@ import type { LessonContent, LessonPlan, LessonRequest } from './schema'
 import { useReveal } from './useReveal'
 import { loadPlans, loadSettings, newId, savePlans, saveSettings, type Settings as SettingsType } from './storage'
 
-type Tab = 'plan' | 'library' | 'settings' | 'about'
+const TABS = ['plan', 'library', 'settings', 'about'] as const
+type Tab = (typeof TABS)[number]
+
+/** The current tab lives in the URL hash (#library, #settings…), so links and the back button work. */
+function tabFromHash(): Tab {
+  const h = location.hash.slice(1)
+  return (TABS as readonly string[]).includes(h) ? (h as Tab) : 'plan'
+}
 
 function toPlan(content: LessonContent, request: LessonRequest, source: LessonPlan['source']): LessonPlan {
   const now = new Date().toISOString()
@@ -20,7 +27,18 @@ function toPlan(content: LessonContent, request: LessonRequest, source: LessonPl
 }
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('plan')
+  const [tab, setTabState] = useState<Tab>(tabFromHash)
+  useEffect(() => {
+    const onHash = () => setTabState(tabFromHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+  function setTab(t: Tab) {
+    if (t === tabFromHash()) return
+    if (t === 'plan') history.pushState(null, '', location.pathname + location.search)
+    else location.hash = t
+    setTabState(t)
+  }
   const [plans, setPlans] = useState<LessonPlan[]>(loadPlans)
   const [settings, setSettings] = useState<SettingsType>(loadSettings)
   // First-time visitors see a real plan built from the default inputs, so the product explains itself.
@@ -108,8 +126,8 @@ export default function App() {
           </div>
         </div>
         <nav>
-          {(['plan', 'library', 'settings', 'about'] as Tab[]).map((t) => (
-            <button key={t} className={tab === t ? 'tab active' : 'tab'} onClick={() => setTab(t)}>
+          {TABS.map((t) => (
+            <button key={t} className={tab === t ? 'tab active' : 'tab'} aria-current={tab === t ? 'page' : undefined} onClick={() => setTab(t)}>
               {{ plan: 'Plan', library: `My lessons (${plans.length})`, settings: 'Settings', about: 'About' }[t]}
             </button>
           ))}
