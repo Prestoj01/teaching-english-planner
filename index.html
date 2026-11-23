@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Apply the saved theme (or the system's) before first paint, so chalkboard mode doesn't flash white.
+      try {
+        var t = localStorage.getItem('hello-class:theme')
+        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'chalk' : 'paper'
+        document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
     <title>Hello Class · free ESL lesson planner</title>
     <meta name="description" content="Hello Class turns a topic into a timed, CELTA-style ESL lesson plan. Free, offline, no account." />
   </head>

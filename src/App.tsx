@@ -8,6 +8,7 @@ import { Hero } from './components/Hero'
 import { Marquee } from './components/Marquee'
 import { PlanSkeleton } from './components/PlanSkeleton'
 import { Settings } from './components/Settings'
+import { ThemeToggle } from './components/ThemeToggle'
 import { generateTemplatePlan } from './generator/templateGenerator'
 import type { LessonContent, LessonPlan, LessonRequest } from './schema'
 import { useReveal } from './useReveal'
@@ -129,6 +130,7 @@ export default function App() {
             <p className="hand tagline">free lesson plans for English teachers</p>
           </div>
         </div>
+        <div className="header-right">
         <nav>
           {TABS.map((t) => (
             <button key={t} className={tab === t ? 'tab active' : 'tab'} aria-current={tab === t ? 'page' : undefined} onClick={() => setTab(t)}>
@@ -136,6 +138,8 @@ export default function App() {
             </button>
           ))}
         </nav>
+        <ThemeToggle />
+        </div>
       </header>
 
       <main>
