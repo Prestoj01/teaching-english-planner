@@ -494,6 +494,60 @@ tr.drop-target td { box-shadow: inset 0 3px 0 var(--brand); }
 .toast button { background: var(--accent); color: var(--note-ink); border-color: var(--accent); box-shadow: none; padding: var(--s-1) var(--s-3); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(16px); } }
 
+/* ─── Handouts panel ─── */
+.handouts { position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; background: var(--paper); background-image: radial-gradient(var(--paper-dot) 1px, transparent 1.2px); background-size: 22px 22px; animation: fade-in 200ms ease-out; outline: none; }
+.handouts-bar { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; padding: var(--s-3) var(--s-6); border-bottom: 2px solid var(--ink); background: var(--surface); }
+.handouts-bar h2 { font-size: var(--text-xl); margin: 0; }
+.handouts-bar .hint { flex: 1; min-width: 200px; }
+.handouts-body { flex: 1; overflow: auto; display: grid; grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); gap: var(--s-8); padding: var(--s-6); }
+@media (max-width: 860px) { .handouts-body { grid-template-columns: 1fr; } }
+.handouts-controls { display: flex; flex-direction: column; gap: var(--s-5); }
+.handouts-controls fieldset { margin: 0; padding: var(--s-4); border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); }
+.handouts-controls fieldset.off { opacity: 0.6; }
+.handouts-controls legend { padding: 0 var(--s-1); }
+.handouts-controls .hint { margin: 0 0 var(--s-2); }
+label.check { flex-direction: row; align-items: center; gap: var(--s-2); font-size: var(--text-md); cursor: pointer; }
+label.check input { width: 18px; height: 18px; accent-color: var(--brand); }
+.handouts-preview { display: flex; flex-direction: column; align-items: center; gap: var(--s-8); }
+
+/* An A4 sheet. Always paper-white with dark ink, whatever the theme, because that's what prints. */
+.sheet { --ink: #1f1d36; --ink-2: #4a4760; --ink-3: #55516b; --line: #d8d3c4; color: var(--ink);
+  width: min(100%, 210mm); aspect-ratio: 210 / 297; padding: 14mm; background: #fff; box-shadow: var(--shadow-2); font-size: 11.5pt; overflow: hidden; }
+.sheet-head { display: flex; justify-content: space-between; gap: 12pt; padding-bottom: 6pt; border-bottom: 1.5pt solid var(--ink); font-size: 9.5pt; color: var(--ink-2); }
+.sheet-title { font-weight: 600; }
+.sheet-name { display: flex; gap: 4pt; white-space: nowrap; }
+.write-line { display: inline-block; min-width: 45mm; border-bottom: 1px solid var(--ink-3); }
+.sheet-h { font-family: var(--font-serif); font-size: 18pt; margin: 14pt 0 10pt; display: flex; align-items: baseline; gap: 8pt; }
+.word-box { display: flex; flex-wrap: wrap; gap: 6pt 14pt; padding: 8pt 12pt; border: 1.5pt dashed var(--ink-3); border-radius: 6pt; margin: 0 0 14pt; font-weight: 600; }
+.gap-list { padding-left: 18pt; margin: 0; display: grid; gap: 14pt; font-size: 13pt; line-height: 1.8; }
+.gap { display: inline-block; height: 1.1em; vertical-align: -0.2em; border-bottom: 1.5px solid var(--ink); margin: 0 3pt; }
+.answer-key { margin-top: 28pt; font-size: 8.5pt; color: var(--ink-3); transform: rotate(180deg); text-align: right; }
+.cut-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+.cut-grid.wide { grid-template-columns: 1fr 1fr; }
+.cut-card, .role-card { display: grid; place-items: center; text-align: center; min-height: 26mm; padding: 8pt; border: 1px dashed var(--ink-3); margin: -0.5px; font-size: 14pt; font-weight: 600; }
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.role-card { min-height: 60mm; place-items: start; text-align: left; align-content: start; gap: 6pt; font-weight: 400; font-size: 12.5pt; }
+.role-card strong { font-size: 18pt; color: var(--tomato); }
+.role-card p { margin: 0; }
+.ticket-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; height: 100%; }
+.ticket { padding: 10pt; border: 1px dashed var(--ink-3); margin: -0.5px; display: flex; flex-direction: column; gap: 6pt; font-size: 11pt; }
+.ticket-title { margin: 0; font-size: 9pt; color: var(--ink-2); }
+.ticket-title .hand { font-size: 16pt; color: var(--tomato); }
+.ticket ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8pt; }
+.ticket li { display: flex; gap: 6pt; align-items: flex-start; }
+.ticket .box { flex: none; width: 12pt; height: 12pt; border: 1.5px solid var(--ink); border-radius: 2pt; margin-top: 2pt; }
+.ticket-q { margin: auto 0 0; display: flex; flex-direction: column; gap: 10pt; font-size: 10pt; }
+.ticket-q .write-line { min-width: 100%; }
+
+@media print {
+  html.print-handouts .app { display: none !important; }
+  html.print-handouts .handouts { position: static; background: none; display: block; }
+  html.print-handouts .handouts-body { display: block; padding: 0; overflow: visible; }
+  html.print-handouts .sheet { width: auto; aspect-ratio: auto; height: 267mm; padding: 0; box-shadow: none; break-after: page; }
+  html.print-handouts .sheet:last-child { break-after: auto; }
+  html.print-handouts .handouts-preview { display: block; }
+}
+
 /* Tags */
 .tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin: calc(-1 * var(--s-2)) 0 var(--s-5); }
 .tag { display: inline-flex; align-items: center; gap: 2px; padding: 2px 2px 2px var(--s-3); background: var(--mint); border-radius: var(--r-pill); font-size: var(--text-sm); font-weight: 600; }

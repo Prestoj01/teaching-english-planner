@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Doodle } from './Doodle'
+import { Handouts } from './Handouts'
 import { Icon } from './Icon'
 import { TagEditor } from './TagEditor'
 import { Timeline } from './Timeline'
@@ -28,6 +29,7 @@ const BLANK_STAGE: Stage = {
 /** Shows a plan, and lets the teacher edit any part of it in place. */
 export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, canUndo, onNotice }: Props) {
   const [editing, setEditing] = useState(false)
+  const [handouts, setHandouts] = useState(false)
   const [dragFrom, setDragFrom] = useState<number | null>(null)
   const [dragOver, setDragOver] = useState<number | null>(null)
   const r = plan.request
@@ -67,11 +69,13 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, 
 
   return (
     <article className="card plan taped taped-right">
+      {handouts && <Handouts plan={plan} onClose={() => setHandouts(false)} />}
       <div className="toolbar no-print">
         <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
         {onUndo && <button className="secondary" onClick={onUndo} disabled={!canUndo} title="Undo (⌘Z / Ctrl+Z)"><Icon name="undo" /> Undo</button>}
         <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
         {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
+        <button className="secondary" onClick={() => setHandouts(true)}><Icon name="sheets" /> Handouts</button>
         <button className="secondary" onClick={share}><Icon name="link" /> Share link</button>
         <button className="secondary" onClick={() => window.print()}><Icon name="printer" /> Print</button>
         <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
