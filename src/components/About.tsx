@@ -1,5 +1,6 @@
 import { Doodle, type DoodleName } from './Doodle'
 import { FRAMEWORK_INFO } from '../data/frameworks'
+import { suggestActivityUrl } from '../feedback'
 import { FRAMEWORKS } from '../schema'
 
 const PROMISES: { doodle: DoodleName; title: string; body: string; tone: string }[] = [
@@ -44,6 +45,18 @@ export function About() {
           </li>
         ))}
       </ul>
+
+      <aside className="contribute sticky-note tone-mint reveal">
+        <Doodle name="bubble" size={48} />
+        <div>
+          <h3 className="hand">Got an activity that always works?</h3>
+          <p>
+            The offline planner draws on a bank of tried-and-tested activities. Share one of yours and it could help other
+            teachers' lessons too. The link opens a short form on GitHub; nothing is sent until you press Submit there.
+          </p>
+          <a className="button-link" href={suggestActivityUrl} target="_blank" rel="noreferrer">Suggest an activity</a>
+        </div>
+      </aside>
 
       <aside className="margin-note reveal">
         <h3 className="hand">First-language tips are tendencies, not rules</h3>

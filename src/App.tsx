@@ -12,6 +12,7 @@ import { Settings } from './components/Settings'
 import { ThemeToggle } from './components/ThemeToggle'
 import { generateTemplatePlan } from './generator/templateGenerator'
 import type { LessonContent, LessonPlan, LessonRequest } from './schema'
+import { reportProblemUrl, suggestActivityUrl } from './feedback'
 import { decodeShare, isShareHash } from './share'
 import { useReveal } from './useReveal'
 import { loadPlans, loadSettings, newId, savePlans, saveSettings, type Settings as SettingsType } from './storage'
@@ -313,6 +314,9 @@ export default function App() {
       <footer className="no-print">
         Made by <a href="https://github.com/Prestoj01" target="_blank" rel="noreferrer">Preston</a> · Free and open source ·{' '}
         <a href="https://github.com/Prestoj01/teaching-english-planner" target="_blank" rel="noreferrer">Source code</a>
+        <br />
+        <a href={suggestActivityUrl} target="_blank" rel="noreferrer">Suggest an activity</a> ·{' '}
+        <a href={reportProblemUrl} target="_blank" rel="noreferrer">Report a problem</a>
       </footer>
     </div>
   )
