@@ -23,7 +23,7 @@ function tabFromHash(): Tab {
 
 function toPlan(content: LessonContent, request: LessonRequest, source: LessonPlan['source']): LessonPlan {
   const now = new Date().toISOString()
-  return { ...content, id: newId(), createdAt: now, updatedAt: now, source, request }
+  return { ...content, id: newId(), createdAt: now, updatedAt: now, source, request, tags: [] }
 }
 
 export default function App() {
@@ -95,7 +95,7 @@ export default function App() {
     setIsExample(false)
     const v = variant + 1
     setVariant(v)
-    setCurrent({ ...toPlan(generateTemplatePlan(current.request, v), current.request, 'template'), id: current.id })
+    setCurrent({ ...toPlan(generateTemplatePlan(current.request, v), current.request, 'template'), id: current.id, tags: current.tags })
     setDirty(true)
     setGeneration((g) => g + 1)
   }

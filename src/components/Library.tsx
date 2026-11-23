@@ -4,7 +4,7 @@ import { Doodle } from './Doodle'
 import { Icon } from './Icon'
 import { MiniTimeline } from './Timeline'
 import { parseImport } from '../storage'
-import type { LessonPlan } from '../schema'
+import { CEFR_LEVELS, FOCUS_TYPES, type LessonPlan } from '../schema'
 
 interface Props {
   plans: LessonPlan[]
@@ -19,9 +19,22 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
   const [message, setMessage] = useState('')
   const fileInput = useRef<HTMLInputElement>(null)
 
+  // Filters: OR within a group, AND across groups. Only values that exist in the library are offered.
+  const [levels, setLevels] = useState<string[]>([])
+  const [focuses, setFocuses] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>([])
+  const toggle = (set: (f: (xs: string[]) => string[]) => void, v: string) => set((xs) => (xs.includes(v) ? xs.filter((x) => x !== v) : [...xs, v]))
+  const presentLevels = CEFR_LEVELS.filter((l) => plans.some((p) => p.request.level === l))
+  const presentFocuses = FOCUS_TYPES.filter((f) => plans.some((p) => p.request.focus === f))
+  const presentTags = [...new Set(plans.flatMap((p) => p.tags))].sort((a, b) => a.localeCompare(b))
+  const filtering = levels.length + focuses.length + tags.length > 0
+
   const q = query.toLowerCase()
   const shown = plans
-    .filter((p) => !q || `${p.title} ${p.request.topic} ${p.request.level} ${p.request.targetLanguage}`.toLowerCase().includes(q))
+    .filter((p) => !q || `${p.title} ${p.request.topic} ${p.request.level} ${p.request.targetLanguage} ${p.tags.join(' ')}`.toLowerCase().includes(q))
+    .filter((p) => !levels.length || levels.includes(p.request.level))
+    .filter((p) => !focuses.length || focuses.includes(p.request.focus))
+    .filter((p) => !tags.length || tags.some((t) => p.tags.includes(t)))
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
 
   async function handleImport(file: File) {
@@ -38,7 +51,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
     <section className="library stack">
       <div className="library-head">
         <h2>Your saved lesson plans</h2>
-        <input type="search" placeholder="Search by title, topic or level…" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <input type="search" placeholder="Search by title, topic, level or tag…" value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
       <p className="hint">
         Lessons are saved only in this browser. Export a backup to move them to another device.
@@ -62,10 +75,27 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
         {message && <span key={message} className="hint confirm" role="status">{message}</span>}
       </div>
 
+      {plans.length > 1 && (
+        <div className="filters" role="group" aria-label="Filter lessons">
+          {presentLevels.map((l) => (
+            <button key={l} className={`filter${levels.includes(l) ? ' on' : ''}`} aria-pressed={levels.includes(l)} onClick={() => toggle(setLevels, l)}>{l}</button>
+          ))}
+          {presentFocuses.length > 0 && <span className="filter-sep" aria-hidden="true" />}
+          {presentFocuses.map((f) => (
+            <button key={f} className={`filter focus${focuses.includes(f) ? ' on' : ''}`} aria-pressed={focuses.includes(f)} onClick={() => toggle(setFocuses, f)}>{f}</button>
+          ))}
+          {presentTags.length > 0 && <span className="filter-sep" aria-hidden="true" />}
+          {presentTags.map((t) => (
+            <button key={t} className={`filter tag-filter${tags.includes(t) ? ' on' : ''}`} aria-pressed={tags.includes(t)} onClick={() => toggle(setTags, t)}># {t}</button>
+          ))}
+          {filtering && <button className="filter clear" onClick={() => { setLevels([]); setFocuses([]); setTags([]) }}>Clear</button>}
+        </div>
+      )}
+
       {shown.length === 0 ? (
         <div className="empty">
           <Doodle name="plane" size={88} className="float" />
-          <p className="hand">{plans.length === 0 ? 'Nothing saved yet. Plan a lesson and press Save.' : 'No lessons match that search.'}</p>
+          <p className="hand">{plans.length === 0 ? 'Nothing saved yet. Plan a lesson and press Save.' : 'No lessons match those filters.'}</p>
         </div>
       ) : (
         <ul className="lesson-grid">
@@ -79,6 +109,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
                   <span className="chip focus">{p.request.focus}</span>
                   <span className="chip num">{p.request.durationMinutes} min</span>
                   {p.source === 'ai' && <span className="chip">by Claude</span>}
+                  {p.tags.map((t) => <span key={t} className="chip tag-chip"># {t}</span>)}
                 </span>
                 <MiniTimeline stages={p.stages} />
               </button>

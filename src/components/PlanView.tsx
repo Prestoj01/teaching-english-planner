@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Doodle } from './Doodle'
 import { Icon } from './Icon'
+import { TagEditor } from './TagEditor'
 import { Timeline } from './Timeline'
 import { FRAMEWORK_INFO } from '../data/frameworks'
 import { downloadFile, planToMarkdown, slugify } from '../export'
@@ -46,6 +47,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <div><dt>Framework</dt><dd>{FRAMEWORK_INFO[r.framework].name}</dd></div>
         {plan.source === 'ai' && <div><dt>Written by</dt><dd>Claude</dd></div>}
       </dl>
+      <TagEditor tags={plan.tags} onChange={(tags) => set('tags', tags)} />
       <Timeline stages={plan.stages} />
 
       <section className="reveal">

@@ -367,6 +367,24 @@ th { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; let
 .library-head { display: flex; gap: var(--s-4); flex-wrap: wrap; justify-content: space-between; align-items: center; }
 .library-head input { max-width: 320px; }
 .library h2 { font-size: var(--text-3xl); margin: 0; }
+/* Tags */
+.tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin: calc(-1 * var(--s-2)) 0 var(--s-5); }
+.tag { display: inline-flex; align-items: center; gap: 2px; padding: 2px 2px 2px var(--s-3); background: var(--mint); border-radius: var(--r-pill); font-size: var(--text-sm); font-weight: 600; }
+.tag button { all: unset; cursor: pointer; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; font-size: 1rem; line-height: 1; color: var(--ink-2); }
+.tag button:hover { background: rgb(31 29 54 / 0.1); }
+.tag button:focus-visible { outline: 2px solid var(--brand); }
+.tag-input { width: auto; min-width: 12ch; field-sizing: content; padding: 2px var(--s-2); border: 1px dashed var(--line-strong); border-radius: var(--r-pill); background: transparent; font-size: var(--text-sm); }
+.tag-input:focus { border-style: solid; background: #fff; }
+.chip.tag-chip { background: var(--mint); color: var(--ink); }
+/* Library filters: toggle chips */
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+button.filter { padding: 2px var(--s-3); font-size: var(--text-sm); border-width: 1.5px; box-shadow: none; background: var(--surface); color: var(--ink-2); border-radius: var(--r-pill); }
+button.filter:hover:not(:disabled) { background: var(--accent-soft); }
+button.filter.on { background: var(--ink); color: var(--paper); }
+button.filter.focus { text-transform: capitalize; }
+button.filter.clear { border-style: dashed; color: var(--tomato); }
+.filter-sep { width: 1px; height: 20px; background: var(--line-strong); margin: 0 var(--s-1); }
+
 /* Saved lessons are index cards scattered on the desk */
 .lesson-grid { list-style: none; padding: 0; margin: var(--s-4) 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-8) var(--s-6); }
 .lesson-card { position: relative; display: flex; flex-direction: column; background: #fff; box-shadow: var(--shadow-2); border-top: 6px solid var(--brand);
