@@ -1,7 +1,5 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Doodle } from './Doodle'
-import { ClassroomMode } from './ClassroomMode'
-import { Handouts } from './Handouts'
 import { Icon } from './Icon'
 import { TagEditor } from './TagEditor'
 import { Timeline } from './Timeline'
@@ -22,6 +20,10 @@ interface Props {
   /** Lets the parent offer "Stage deleted · Undo". */
   onNotice?: (message: string, undoable?: boolean) => void
 }
+
+// Only downloaded when first opened.
+const ClassroomMode = lazy(() => import('./ClassroomMode').then((m) => ({ default: m.ClassroomMode })))
+const Handouts = lazy(() => import('./Handouts').then((m) => ({ default: m.Handouts })))
 
 const BLANK_STAGE: Stage = {
   name: 'New stage', minutes: 5, interaction: 'S-S', aim: '', teacherProcedure: [], studentActivity: '', materials: [],
@@ -71,8 +73,10 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, 
 
   return (
     <article className="card plan taped taped-right">
-      {handouts && <Handouts plan={plan} onClose={() => setHandouts(false)} />}
-      {teaching && <ClassroomMode plan={plan} onClose={() => setTeaching(false)} />}
+      <Suspense fallback={null}>
+        {handouts && <Handouts plan={plan} onClose={() => setHandouts(false)} />}
+        {teaching && <ClassroomMode plan={plan} onClose={() => setTeaching(false)} />}
+      </Suspense>
       <div className="toolbar no-print">
         <button className="teach" onClick={() => setTeaching(true)} disabled={plan.stages.length === 0}><Icon name="play" /> Teach this lesson</button>
         <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
