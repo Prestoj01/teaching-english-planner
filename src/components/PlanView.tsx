@@ -1,42 +1,104 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Doodle } from './Doodle'
 import { Icon } from './Icon'
+import { TagEditor } from './TagEditor'
 import { Timeline } from './Timeline'
 import { FRAMEWORK_INFO } from '../data/frameworks'
 import { downloadFile, planToMarkdown, slugify } from '../export'
+import { encodeShare } from '../share'
 import { INTERACTIONS, type Interaction, type LessonPlan, type Stage } from '../schema'
 
 interface Props {
   plan: LessonPlan
   saved: boolean
-  onChange: (plan: LessonPlan) => void
+  /** checkpoint: always record an undo step (structural edits), rather than coalescing with recent typing. */
+  onChange: (plan: LessonPlan, checkpoint?: boolean) => void
   onSave: () => void
   onRegenerate?: () => void
+  onUndo?: () => void
+  canUndo?: boolean
+  /** Lets the parent offer "Stage deleted · Undo". */
+  onNotice?: (message: string, undoable?: boolean) => void
+}
+
+// Only downloaded when first opened.
+const ClassroomMode = lazy(() => import('./ClassroomMode').then((m) => ({ default: m.ClassroomMode })))
+const Handouts = lazy(() => import('./Handouts').then((m) => ({ default: m.Handouts })))
+
+const BLANK_STAGE: Stage = {
+  name: 'New stage', minutes: 5, interaction: 'S-S', aim: '', teacherProcedure: [], studentActivity: '', materials: [],
 }
 
 /** Shows a plan, and lets the teacher edit any part of it in place. */
-export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props) {
+export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, canUndo, onNotice }: Props) {
   const [editing, setEditing] = useState(false)
+  const [handouts, setHandouts] = useState(false)
+  const [teaching, setTeaching] = useState(false)
+  const [dragFrom, setDragFrom] = useState<number | null>(null)
+  const [dragOver, setDragOver] = useState<number | null>(null)
   const r = plan.request
   const total = plan.stages.reduce((a, s) => a + s.minutes, 0)
   const set = <K extends keyof LessonPlan>(key: K, value: LessonPlan[K]) => onChange({ ...plan, [key]: value })
   const setStage = (i: number, patch: Partial<Stage>) =>
     set('stages', plan.stages.map((s, j) => (j === i ? { ...s, ...patch } : s)))
+  const setStages = (stages: Stage[]) => onChange({ ...plan, stages }, true)
+  const moveStage = (from: number, to: number) => {
+    if (to < 0 || to >= plan.stages.length || from === to) return
+    const next = [...plan.stages]
+    const [s] = next.splice(from, 1)
+    next.splice(to, 0, s)
+    setStages(next)
+  }
+  const deleteStage = (i: number) => {
+    setStages(plan.stages.filter((_, j) => j !== i))
+    onNotice?.(`Deleted "${plan.stages[i].name}"`)
+  }
+  const addStage = (at: number) => {
+    const next = [...plan.stages]
+    next.splice(at, 0, { ...BLANK_STAGE })
+    setStages(next)
+  }
+  /** Copies a link that contains the whole plan. Falls back to showing the link if the clipboard is blocked. */
+  async function share() {
+    const url = `${location.origin}${location.pathname}#${await encodeShare(plan)}`
+    try {
+      await navigator.clipboard.writeText(url)
+      onNotice?.('Link copied. Anyone who opens it gets their own copy of this plan.', false)
+    } catch {
+      window.prompt('Copy this link to share the plan:', url)
+    }
+  }
   const tla = plan.targetLanguageAnalysis
   const setTla = (patch: Partial<typeof tla>) => set('targetLanguageAnalysis', { ...tla, ...patch })
 
   return (
     <article className="card plan taped taped-right">
+      <Suspense fallback={null}>
+        {handouts && <Handouts plan={plan} onClose={() => setHandouts(false)} />}
+        {teaching && <ClassroomMode plan={plan} onClose={() => setTeaching(false)} />}
+      </Suspense>
       <div className="toolbar no-print">
-        <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
-        <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
-        {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
-        <button className="secondary" onClick={() => window.print()}><Icon name="printer" /> Print</button>
-        <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
-          <Icon name="download" /> Download .md
-        </button>
+        <div className="toolbar-group">
+          <button className="teach" onClick={() => setTeaching(true)} disabled={plan.stages.length === 0}><Icon name="play" /> Teach this lesson</button>
+          <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
+          <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
+          {onUndo && (editing || canUndo) && <button className="secondary" onClick={onUndo} disabled={!canUndo} title="Undo (⌘Z / Ctrl+Z)"><Icon name="undo" /> Undo</button>}
+          {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
+          <button className="secondary" onClick={() => setHandouts(true)}><Icon name="sheets" /> Handouts</button>
+        </div>
+        <div className="toolbar-group export" role="group" aria-label="Share and export">
+          <button className="secondary small" onClick={share}><Icon name="link" size={14} /> Share link</button>
+          <button className="secondary small" onClick={() => window.print()}><Icon name="printer" size={14} /> Print</button>
+          <button className="secondary small" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')} title="Download as Markdown">
+            <Icon name="download" size={14} /> .md
+          </button>
+        </div>
       </div>
 
+      <p className="print-only print-brand">
+        <span className="logo" aria-hidden="true">Hi</span> Hello Class <span className="hand">lesson plan</span>
+        {plan.tags.length > 0 && <span className="print-tags">{plan.tags.map((t) => `#${t}`).join('  ')}</span>}
+      </p>
       <div className="plan-title"><Text editing={editing} value={plan.title} onChange={(v) => set('title', v)} as="h2" /></div>
       <dl className="meta">
         <div><dt>Level</dt><dd>{r.level}</dd></div>
@@ -46,6 +108,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         <div><dt>Framework</dt><dd>{FRAMEWORK_INFO[r.framework].name}</dd></div>
         {plan.source === 'ai' && <div><dt>Written by</dt><dd>Claude</dd></div>}
       </dl>
+      <TagEditor tags={plan.tags} onChange={(tags) => set('tags', tags)} />
       <Timeline stages={plan.stages} />
 
       <section className="reveal">
@@ -90,8 +153,25 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
           </thead>
           <tbody>
             {plan.stages.map((s, i) => (
-              <tr key={i}>
+              <tr
+                key={i}
+                className={[editing ? 'editable-stage' : '', dragFrom === i ? 'dragging' : '', dragOver === i && dragFrom !== i ? 'drop-target' : ''].join(' ')}
+                draggable={editing}
+                onDragStart={(e) => { setDragFrom(i); e.dataTransfer.effectAllowed = 'move' }}
+                onDragOver={(e) => { if (dragFrom !== null) { e.preventDefault(); setDragOver(i) } }}
+                onDrop={(e) => { e.preventDefault(); if (dragFrom !== null) moveStage(dragFrom, i); setDragFrom(null); setDragOver(null) }}
+                onDragEnd={() => { setDragFrom(null); setDragOver(null) }}
+              >
                 <td>
+                  {editing && (
+                    <div className="stage-tools no-print">
+                      <span className="grip" title="Drag to reorder" aria-hidden="true"><Icon name="grip" /></span>
+                      <button type="button" className="icon-btn" aria-label={`Move ${s.name} up`} disabled={i === 0} onClick={() => moveStage(i, i - 1)}><Icon name="arrowUp" size={14} /></button>
+                      <button type="button" className="icon-btn" aria-label={`Move ${s.name} down`} disabled={i === plan.stages.length - 1} onClick={() => moveStage(i, i + 1)}><Icon name="arrowDown" size={14} /></button>
+                      <button type="button" className="icon-btn" aria-label={`Add a stage after ${s.name}`} onClick={() => addStage(i + 1)}><Icon name="plus" size={14} /></button>
+                      <button type="button" className="icon-btn danger" aria-label={`Delete ${s.name}`} onClick={() => deleteStage(i)}><Icon name="x" size={14} /></button>
+                    </div>
+                  )}
                   <strong><Text editing={editing} value={s.name} onChange={(v) => setStage(i, { name: v })} /></strong>
                   <div className="stage-aim"><Text editing={editing} value={s.aim} onChange={(v) => setStage(i, { aim: v })} multiline /></div>
                 </td>
@@ -122,6 +202,11 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
             ))}
           </tbody>
         </table>
+        {editing && (
+          <button type="button" className="secondary add-stage no-print" onClick={() => addStage(plan.stages.length)}>
+            <Icon name="plus" /> Add a stage
+          </button>
+        )}
         <p className="hint">Interaction: T-Ss = teacher to class, S = individual, S-S = pairs, Groups = small groups.</p>
       </section>
 

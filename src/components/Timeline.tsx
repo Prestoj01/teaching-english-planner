@@ -1,7 +1,7 @@
 import type { Interaction, Stage } from '../schema'
 
 /** Who is doing the talking in each interaction pattern. Students-talking stages get the accent. */
-const TALK: Record<Interaction, { label: string; kind: 'teacher' | 'solo' | 'students' }> = {
+export const TALK: Record<Interaction, { label: string; kind: 'teacher' | 'solo' | 'students' }> = {
   'T-Ss': { label: 'Teacher-led', kind: 'teacher' },
   'T-S': { label: 'Teacher-led', kind: 'teacher' },
   S: { label: 'Individual', kind: 'solo' },
@@ -23,8 +23,9 @@ export function Timeline({ stages }: { stages: Stage[] }) {
             style={{ flexGrow: Math.max(s.minutes, 0.5), '--i': i } as React.CSSProperties}
             title={`${s.name} · ${s.minutes} min · ${TALK[s.interaction].label}`}
           >
-            <span className="seg-name">{s.name.split(':')[0]}</span>
-            <span className="seg-min">{s.minutes}′</span>
+            <span className="sr-only">{s.name}, {s.minutes} minutes, {TALK[s.interaction].label.toLowerCase()}</span>
+            <span className="seg-name" aria-hidden="true">{s.name.split(':')[0]}</span>
+            <span className="seg-min" aria-hidden="true">{s.minutes}′</span>
           </li>
         ))}
       </ol>
@@ -36,4 +37,21 @@ export function Timeline({ stages }: { stages: Stage[] }) {
       </figcaption>
     </figure>
   )
+}
+
+/** A thin, label-free version of the timeline for lesson cards. */
+export function MiniTimeline({ stages }: { stages: Stage[] }) {
+  return (
+    <div className="mini-timeline" aria-hidden="true">
+      {stages.map((s, i) => (
+        <span key={i} className={`talk-${TALK[s.interaction].kind}`} style={{ flexGrow: Math.max(s.minutes, 0.5) }} />
+      ))}
+    </div>
+  )
+}
+
+/** Share of a lesson where students, not the teacher, are working. */
+export function studentShare(stages: Stage[]): number {
+  const total = stages.reduce((a, s) => a + s.minutes, 0) || 1
+  return Math.round((stages.filter((s) => TALK[s.interaction].kind !== 'teacher').reduce((a, s) => a + s.minutes, 0) / total) * 100)
 }

@@ -10,7 +10,7 @@ const request: LessonRequest = {
   focus: 'grammar', framework: 'TTT', durationMinutes: 45, classSize: 20, learnerL1: 'Arabic', notes: '',
 }
 const plan: LessonPlan = {
-  ...generateTemplatePlan(request), id: 'x', createdAt: '2026-01-01', updatedAt: '2026-01-01', source: 'template', request,
+  ...generateTemplatePlan(request), id: 'x', createdAt: '2026-01-01', updatedAt: '2026-01-01', source: 'template', request, tags: [],
 }
 
 describe('PlanView', () => {

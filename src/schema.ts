@@ -87,5 +87,7 @@ export const LessonPlanSchema = LessonContentSchema.extend({
   updatedAt: z.string(),
   source: z.enum(['template', 'ai']),
   request: LessonRequestSchema,
+  // The teacher's own labels, e.g. "Class 3B" or "exam prep". Older saved plans have none.
+  tags: z.array(z.string()).default([]),
 })
 export type LessonPlan = z.infer<typeof LessonPlanSchema>

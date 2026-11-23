@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Doodle } from './Doodle'
 import { Icon } from './Icon'
 import { AI_MODELS, type AiModelId } from '../ai/models'
 import type { Settings as SettingsType } from '../storage'
@@ -14,17 +15,20 @@ export function Settings({ settings, onSave }: Props) {
   const [saved, setSaved] = useState(false)
 
   return (
-    <section className="card stack settings">
-      <h2>Optional: write plans with your own Claude key</h2>
-      <div className="callout">
-        <p>
-          <strong>The planner is completely free and works without AI.</strong> AI generation is optional.
-          If you'd like it, paste your own{' '}
-          <a href="https://platform.claude.com/" target="_blank" rel="noreferrer">Claude API key</a>. Your key is stored only in
-          this browser and is sent only to Anthropic's API. Any usage is billed to your own account; this site never sees it.
-        </p>
-      </div>
+    <section className="settings-page">
+      <header className="page-head">
+        <Doodle name="bulb" size={64} />
+        <div>
+          <h2>Optional: write plans with your own Claude key</h2>
+          <p className="lede">Claude writes a fully custom plan from your notes, in under a minute. Everything else on this site works without it.</p>
+        </div>
+      </header>
 
+      <div className="settings-layout">
+      <div className="card taped stack key-card">
+      <p className={`key-status ${settings.apiKey ? 'on' : ''}`}>
+        <span className="dot" aria-hidden="true" /> {settings.apiKey ? 'AI is on: a key is saved in this browser' : 'AI is off: no key saved'}
+      </p>
       <label>
         Claude API key
         <div className="input-group">
@@ -56,6 +60,18 @@ export function Settings({ settings, onSave }: Props) {
           Remove key
         </button>
         {saved && <span className="hint confirm" role="status"><Icon name="check" size={14} /> Saved</span>}
+      </div>
+      </div>
+
+      <aside className="sticky-note key-facts">
+        <h3 className="hand">Good to know</h3>
+        <ul>
+          <li>The planner is <strong>completely free</strong> without AI.</li>
+          <li>Your key is stored <strong>only in this browser</strong> and sent only to Anthropic.</li>
+          <li>Usage is billed to <strong>your own</strong> Anthropic account. This site never sees it.</li>
+          <li>Get a key at <a href="https://platform.claude.com/" target="_blank" rel="noreferrer">platform.claude.com</a>.</li>
+        </ul>
+      </aside>
       </div>
     </section>
   )
