@@ -5,6 +5,7 @@ import { TagEditor } from './TagEditor'
 import { Timeline } from './Timeline'
 import { FRAMEWORK_INFO } from '../data/frameworks'
 import { downloadFile, planToMarkdown, slugify } from '../export'
+import { encodeShare } from '../share'
 import { INTERACTIONS, type Interaction, type LessonPlan, type Stage } from '../schema'
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
   onUndo?: () => void
   canUndo?: boolean
   /** Lets the parent offer "Stage deleted · Undo". */
-  onNotice?: (message: string) => void
+  onNotice?: (message: string, undoable?: boolean) => void
 }
 
 const BLANK_STAGE: Stage = {
@@ -51,6 +52,16 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, 
     next.splice(at, 0, { ...BLANK_STAGE })
     setStages(next)
   }
+  /** Copies a link that contains the whole plan. Falls back to showing the link if the clipboard is blocked. */
+  async function share() {
+    const url = `${location.origin}${location.pathname}#${await encodeShare(plan)}`
+    try {
+      await navigator.clipboard.writeText(url)
+      onNotice?.('Link copied. Anyone who opens it gets their own copy of this plan.', false)
+    } catch {
+      window.prompt('Copy this link to share the plan:', url)
+    }
+  }
   const tla = plan.targetLanguageAnalysis
   const setTla = (patch: Partial<typeof tla>) => set('targetLanguageAnalysis', { ...tla, ...patch })
 
@@ -61,6 +72,7 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, 
         {onUndo && <button className="secondary" onClick={onUndo} disabled={!canUndo} title="Undo (⌘Z / Ctrl+Z)"><Icon name="undo" /> Undo</button>}
         <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
         {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
+        <button className="secondary" onClick={share}><Icon name="link" /> Share link</button>
         <button className="secondary" onClick={() => window.print()}><Icon name="printer" /> Print</button>
         <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
           <Icon name="download" /> Download .md

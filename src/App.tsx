@@ -12,6 +12,7 @@ import { Settings } from './components/Settings'
 import { ThemeToggle } from './components/ThemeToggle'
 import { generateTemplatePlan } from './generator/templateGenerator'
 import type { LessonContent, LessonPlan, LessonRequest } from './schema'
+import { decodeShare, isShareHash } from './share'
 import { useReveal } from './useReveal'
 import { loadPlans, loadSettings, newId, savePlans, saveSettings, type Settings as SettingsType } from './storage'
 
@@ -53,6 +54,7 @@ export default function App() {
   const [variant, setVariant] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [shareError, setShareError] = useState(false)
   const lastAiRequest = useRef<LessonRequest | null>(null)
   const planRef = useRef<HTMLDivElement>(null)
   // Bumped on every fresh generation so the plan replays its entrance animation.
@@ -69,8 +71,9 @@ export default function App() {
   const undoStack = useRef<LessonPlan[]>([])
   const lastEdit = useRef(0)
   const [undoDepth, setUndoDepth] = useState(0)
-  const [notice, setNotice] = useState('')
-  function resetUndo() { undoStack.current = []; setUndoDepth(0); setNotice('') }
+  const [notice, setNoticeState] = useState<{ text: string; undoable: boolean } | null>(null)
+  const setNotice = (text: string, undoable = true) => setNoticeState(text ? { text, undoable } : null)
+  function resetUndo() { undoStack.current = []; setUndoDepth(0); setNoticeState(null) }
 
   function changePlan(next: LessonPlan, checkpoint = false) {
     const now = Date.now()
@@ -91,7 +94,7 @@ export default function App() {
     lastEdit.current = 0
     setCurrent(prev)
     setDirty(true)
-    setNotice('')
+    setNoticeState(null)
   }
 
   // ⌘Z / Ctrl+Z undoes plan edits, except inside a text field where the browser's own undo is better.
@@ -110,9 +113,31 @@ export default function App() {
 
   useEffect(() => {
     if (!notice) return
-    const id = setTimeout(() => setNotice(''), 6000)
+    const id = setTimeout(() => setNoticeState(null), 6000)
     return () => clearTimeout(id)
   }, [notice])
+
+  // Opening a share link (#share=…) loads that plan as an unsaved copy, then tidies the URL.
+  const [fromShare, setFromShare] = useState(false)
+  useEffect(() => {
+    async function receive() {
+      if (!isShareHash(location.hash)) return
+      const shared = await decodeShare(location.hash)
+      history.replaceState(null, '', location.pathname + location.search)
+      if (!shared) { setShareError(true); return }
+      setShareError(false)
+      resetUndo()
+      setCurrent({ ...toPlan(shared, shared.request, shared.source), tags: shared.tags })
+      setDirty(true)
+      setIsExample(false)
+      setFromShare(true)
+      setTabState('plan')
+      requestAnimationFrame(() => planRef.current?.scrollIntoView({ block: 'start' }))
+    }
+    receive()
+    window.addEventListener('hashchange', receive)
+    return () => window.removeEventListener('hashchange', receive)
+  }, [])
 
   useEffect(() => savePlans(plans), [plans])
   useReveal()
@@ -122,6 +147,7 @@ export default function App() {
   async function generate(req: LessonRequest, mode: 'template' | 'ai') {
     setError('')
     setIsExample(false)
+    setFromShare(false)
     if (mode === 'template') {
       resetUndo()
       setVariant(0)
@@ -167,6 +193,7 @@ export default function App() {
 
   function open(plan: LessonPlan) {
     resetUndo()
+    setFromShare(false)
     setIsExample(false)
     setCurrent(plan)
     setDirty(false)
@@ -208,6 +235,13 @@ export default function App() {
                 busy={busy}
                 onGenerate={generate}
               />
+              {shareError && (
+                <ErrorNote
+                  title="That share link didn't work"
+                  message="It looks incomplete or damaged, so the plan couldn't be opened. Ask for the link again: some apps cut long links short."
+                  onDismiss={() => setShareError(false)}
+                />
+              )}
               {error && (
                 <ErrorNote
                   message={error}
@@ -217,6 +251,11 @@ export default function App() {
                 />
               )}
             </div>
+            {current && fromShare && !busy && !isSaved && (
+              <p className="example-note hand no-print">
+                Someone shared this plan with you. Press Save to keep your own copy.
+              </p>
+            )}
             {current && isExample && !busy && (
               <p className="example-note hand no-print">
                 Here's an example: the plan the form above makes. Change it and press Generate to make your own.
@@ -266,8 +305,8 @@ export default function App() {
 
       {notice && tab === 'plan' && (
         <div className="toast no-print" role="status">
-          {notice}
-          <button onClick={undo}><Icon name="undo" size={14} /> Undo</button>
+          {notice.text}
+          {notice.undoable && <button onClick={undo}><Icon name="undo" size={14} /> Undo</button>}
         </div>
       )}
 
