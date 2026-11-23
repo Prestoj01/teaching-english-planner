@@ -279,8 +279,8 @@ textarea { resize: vertical; }
 .toolbar { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; margin-bottom: var(--s-5); }
 .plan { border-left: 0; background-image: linear-gradient(90deg, transparent 0 14px, #f3a598 14px 15.5px, transparent 15.5px); }
 .plan-title h2 { font-size: var(--text-3xl); max-width: 32ch; letter-spacing: -0.015em; }
-@media (max-width: 760px) { .plan-title h2 { font-size: var(--text-2xl); } }
-.plan > section > h3 { font-size: var(--text-xl); font-family: var(--font-serif); font-weight: 600; }
+@media screen and (max-width: 760px) { .plan-title h2 { font-size: var(--text-2xl); } }
+.plan section h3 { font-size: var(--text-xl); font-family: var(--font-serif); font-weight: 600; }
 
 /* Timeline: the shape of the lesson at a glance */
 .timeline { margin: 0 0 var(--s-8); }
@@ -296,7 +296,6 @@ textarea { resize: vertical; }
 .key.talk-solo { box-shadow: inset 0 0 0 1px var(--brand); }
 .key { display: inline-block; width: 10px; height: 10px; border-radius: 3px; }
 .talk-share { margin-left: auto; font-weight: 600; color: var(--ink); }
-@media print { .timeline ol { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
 .meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: 0 0 var(--s-4); }
 .meta div { display: flex; gap: var(--s-1); }
 .meta dt { color: var(--ink-3); }
@@ -318,7 +317,7 @@ th { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; let
 .timing { font-size: var(--text-sm); font-weight: 600; padding: 0.1rem var(--s-2); border-radius: var(--r-pill); margin-left: var(--s-2); }
 .timing.ok { background: var(--brand-soft); color: var(--brand); }
 .timing.warn { background: var(--warn-soft); color: var(--warn); }
-@media (max-width: 760px) {
+@media screen and (max-width: 760px) {
   .card { padding: var(--s-5) var(--s-4); }
   .stages thead { display: none; }
   .stages tr, .stages td { display: block; width: auto !important; border: 0; padding: 0; text-align: left !important; }
@@ -328,7 +327,7 @@ th { font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; let
   .seg-name { display: none; }
 }
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
-@media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+@media screen and (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
 .board { background: var(--chalk); color: var(--chalk-ink); padding: var(--s-3); border-radius: var(--r-md); white-space: pre-wrap; font-family: var(--font-hand); font-size: 1.35rem; line-height: 1.3; margin: 0; padding: var(--s-4) var(--s-5); border: 6px solid #8a5a35; border-radius: var(--r-sm); box-shadow: inset 0 0 30px rgb(0 0 0 / 0.35); }
 
 /* ─── Loading ─── */
@@ -457,12 +456,39 @@ button.lesson-open:hover:not(:disabled), button.lesson-open:active:not(:disabled
 
 footer { text-align: center; color: var(--ink-3); font-size: var(--text-sm); padding: var(--s-8) 0; }
 
+/* ─── Print / PDF: a clean A4 sheet that keeps the personality but saves ink ─── */
+.print-only { display: none; }
+@page { size: A4; margin: 14mm 14mm 16mm; }
 @media print {
-  :root { background: #fff; background-image: none; }
+  :root { background: #fff; background-image: none; font-size: 10.5pt; }
   .no-print { display: none !important; }
-  .reveal, .timeline .seg { opacity: 1 !important; transform: none !important; }
+  .print-only { display: revert; }
+  .reveal, .timeline .seg { opacity: 1 !important; transform: none !important; animation: none !important; }
   .app { max-width: none; padding: 0; }
-  .card { border: none; padding: 0; }
-  .plan section { break-inside: avoid-page; }
+  .card, .plan { border: none; padding: 0; box-shadow: none; background: none; }
+  .taped::before { display: none; }
+
+  .print-brand { display: flex; align-items: center; gap: 6pt; margin: 0 0 8pt; padding-bottom: 6pt; border-bottom: 2pt solid var(--ink); font-family: var(--font-serif); font-weight: 700; font-size: 12pt; }
+  .print-brand .logo { width: 26px; height: 22px; font-size: 10pt; margin-bottom: 4px; border-radius: 5px; }
+  .print-brand .logo::after { left: 6px; bottom: -6px; border-width: 3px; }
+  .print-brand .hand { font-weight: 600; color: var(--tomato); font-size: 14pt; }
+  .print-tags { margin-left: auto; font-family: var(--font-sans); font-size: 9pt; font-weight: 600; color: var(--ink-2); }
+
+  .plan-title h2 { font-size: 22pt; max-width: none; margin-bottom: 4pt; }
+  .meta { margin-bottom: 8pt; font-size: 9.5pt; }
+  .timeline { margin-bottom: 10pt; }
+  .timeline ol, .talk-teacher, .talk-solo, .talk-students, .key { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .seg { padding: 3pt 5pt; }
+  .seg-min { font-size: 11pt; }
+  .plan section h3 { font-size: 13pt; margin-top: 10pt; }
+  .doodle-head .doodle { width: 22px; height: 22px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  h4 { font-size: 8.5pt; margin-top: 6pt; }
+  table { font-size: 9.5pt; }
+  th, td { padding: 4pt 6pt 4pt 0; }
+  .plan section { break-inside: auto; border-top-color: #ccc; }
+  .plan section > h3, h4 { break-after: avoid; }
   tr { break-inside: avoid; }
+  /* The chalkboard prints as a framed whiteboard: same handwriting, no ink-heavy fill */
+  .board { background: #fff; color: var(--ink); border: 2pt solid var(--ink); box-shadow: none; font-size: 13pt; }
+  a { color: inherit; text-decoration: none; }
 }

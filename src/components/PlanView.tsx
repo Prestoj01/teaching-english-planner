@@ -38,6 +38,10 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate }: Props)
         </button>
       </div>
 
+      <p className="print-only print-brand">
+        <span className="logo" aria-hidden="true">Hi</span> Hello Class <span className="hand">lesson plan</span>
+        {plan.tags.length > 0 && <span className="print-tags">{plan.tags.map((t) => `#${t}`).join('  ')}</span>}
+      </p>
       <div className="plan-title"><Text editing={editing} value={plan.title} onChange={(v) => set('title', v)} as="h2" /></div>
       <dl className="meta">
         <div><dt>Level</dt><dd>{r.level}</dd></div>
