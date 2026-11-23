@@ -3,6 +3,7 @@ import { About } from './components/About'
 import { DEFAULT_REQUEST, LessonForm } from './components/LessonForm'
 import { Library } from './components/Library'
 import { PlanView } from './components/PlanView'
+import { ErrorNote } from './components/ErrorNote'
 import { Hero } from './components/Hero'
 import { Marquee } from './components/Marquee'
 import { PlanSkeleton } from './components/PlanSkeleton'
@@ -50,6 +51,7 @@ export default function App() {
   const [variant, setVariant] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const lastAiRequest = useRef<LessonRequest | null>(null)
   const planRef = useRef<HTMLDivElement>(null)
   // Bumped on every fresh generation so the plan replays its entrance animation.
   const [generation, setGeneration] = useState(0)
@@ -76,6 +78,8 @@ export default function App() {
       return
     }
     setBusy(true)
+    lastAiRequest.current = req
+    requestAnimationFrame(() => planRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
     // Loaded on demand so people who never use AI never download the SDK.
     const ai = await import('./ai/claudeGenerator')
     try {
@@ -147,7 +151,14 @@ export default function App() {
                 busy={busy}
                 onGenerate={generate}
               />
-              {error && <p className="error card" role="alert">{error}</p>}
+              {error && (
+                <ErrorNote
+                  message={error}
+                  onRetry={() => lastAiRequest.current && generate(lastAiRequest.current, 'ai')}
+                  onSettings={() => setTab('settings')}
+                  onDismiss={() => setError('')}
+                />
+              )}
             </div>
             {current && isExample && !busy && (
               <p className="example-note hand no-print">
