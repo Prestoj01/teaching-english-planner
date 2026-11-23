@@ -4,6 +4,8 @@
  */
 const PATHS = {
   arrowRight: 'M5 12h14M13 6l6 6-6 6',
+  arrowLeft: 'M19 12H5M11 6l-6 6 6 6',
+  play: 'M7 4.5v15l12-7.5z',
   sparkle: 'M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z',
   pencil: 'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',
   check: 'M5 12.5l4.5 4.5L19 7.5',

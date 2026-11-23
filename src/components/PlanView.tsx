@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Doodle } from './Doodle'
+import { ClassroomMode } from './ClassroomMode'
 import { Handouts } from './Handouts'
 import { Icon } from './Icon'
 import { TagEditor } from './TagEditor'
@@ -30,6 +31,7 @@ const BLANK_STAGE: Stage = {
 export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, canUndo, onNotice }: Props) {
   const [editing, setEditing] = useState(false)
   const [handouts, setHandouts] = useState(false)
+  const [teaching, setTeaching] = useState(false)
   const [dragFrom, setDragFrom] = useState<number | null>(null)
   const [dragOver, setDragOver] = useState<number | null>(null)
   const r = plan.request
@@ -70,7 +72,9 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, 
   return (
     <article className="card plan taped taped-right">
       {handouts && <Handouts plan={plan} onClose={() => setHandouts(false)} />}
+      {teaching && <ClassroomMode plan={plan} onClose={() => setTeaching(false)} />}
       <div className="toolbar no-print">
+        <button className="teach" onClick={() => setTeaching(true)} disabled={plan.stages.length === 0}><Icon name="play" /> Teach this lesson</button>
         <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
         {onUndo && <button className="secondary" onClick={onUndo} disabled={!canUndo} title="Undo (⌘Z / Ctrl+Z)"><Icon name="undo" /> Undo</button>}
         <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
