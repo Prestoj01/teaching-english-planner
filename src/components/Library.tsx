@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { downloadFile } from '../export'
 import { Doodle } from './Doodle'
 import { Icon } from './Icon'
+import { MiniTimeline } from './Timeline'
 import { parseImport } from '../storage'
 import type { LessonPlan } from '../schema'
 
@@ -34,7 +35,7 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
   }
 
   return (
-    <section className="card stack">
+    <section className="library stack">
       <div className="library-head">
         <h2>Your saved lesson plans</h2>
         <input type="search" placeholder="Search by title, topic or level…" value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -67,16 +68,21 @@ export function Library({ plans, onOpen, onDelete, onDuplicate, onImport }: Prop
           <p className="hand">{plans.length === 0 ? 'Nothing saved yet. Plan a lesson and press Save.' : 'No lessons match that search.'}</p>
         </div>
       ) : (
-        <ul className="lesson-list">
+        <ul className="lesson-grid">
           {shown.map((p) => (
-            <li key={p.id} className="reveal">
-              <button className="link" onClick={() => onOpen(p)}>
-                <strong>{p.title}</strong>
-                <span className="hint lesson-meta">
-                  {p.request.level} · {p.request.focus} · {p.request.durationMinutes} min · {new Date(p.updatedAt).toLocaleDateString()}
+            <li key={p.id} className="lesson-card reveal">
+              <button className="lesson-open" onClick={() => onOpen(p)} aria-label={`Open ${p.title}`}>
+                <span className="lesson-date hand">{new Date(p.updatedAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}</span>
+                <strong className="lesson-title">{p.title}</strong>
+                <span className="chips">
+                  <span className="chip level">{p.request.level}</span>
+                  <span className="chip focus">{p.request.focus}</span>
+                  <span className="chip num">{p.request.durationMinutes} min</span>
+                  {p.source === 'ai' && <span className="chip">by Claude</span>}
                 </span>
+                <MiniTimeline stages={p.stages} />
               </button>
-              <div className="row-actions">
+              <div className="card-actions">
                 <button className="secondary small" onClick={() => onDuplicate(p)}><Icon name="copy" size={14} /> Duplicate</button>
                 <button
                   className="danger small"
