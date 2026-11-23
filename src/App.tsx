@@ -203,6 +203,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus() }}>Skip to content</a>
       <header className="no-print">
         <div className="brand">
           <span className="logo" aria-hidden="true">Hi</span>
@@ -223,7 +224,7 @@ export default function App() {
         </div>
       </header>
 
-      <main>
+      <main id="main" tabIndex={-1}>
         {tab === 'plan' && (
           <>
             <Hero />

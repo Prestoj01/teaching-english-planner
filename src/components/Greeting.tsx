@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useMotionPaused } from '../motion'
 
 /** "Hello" in languages ESL teachers often meet in class. dir is set so Arabic renders right-to-left. */
 const HELLOS: { word: string; lang: string; code: string; dir?: 'rtl' }[] = [
@@ -23,12 +24,13 @@ const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(pre
 /** "Hello, class!" that flips through languages every couple of seconds. */
 export function Greeting() {
   const [i, setI] = useState(0)
+  const paused = useMotionPaused()
 
   useEffect(() => {
-    if (reducedMotion()) return
+    if (reducedMotion() || paused) return
     const id = setInterval(() => setI((n) => (n + 1) % HELLOS.length), 2200)
     return () => clearInterval(id)
-  }, [])
+  }, [paused])
 
   const h = HELLOS[i]
   return (

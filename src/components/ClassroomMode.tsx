@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Icon } from './Icon'
 import { TALK } from './Timeline'
 import type { LessonPlan } from '../schema'
+import { useFocusTrap } from '../useFocusTrap'
 
 /** mm:ss, with a minus sign once a stage runs over. */
 export function formatClock(seconds: number): string {
@@ -44,6 +45,7 @@ export function ClassroomMode({ plan, onClose }: { plan: LessonPlan; onClose: ()
   const endAt = useRef<number | null>(null)
   const chimed = useRef(false)
   const root = useRef<HTMLDivElement>(null)
+  useFocusTrap(root)
 
   const stage = stages[index]
   const total = stage ? stage.minutes * 60 : 1
@@ -88,10 +90,15 @@ export function ClassroomMode({ plan, onClose }: { plan: LessonPlan; onClose: ()
 
   // Keyboard controls, focus, and keeping the screen awake while teaching.
   useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null
     root.current?.focus()
+    return () => previous?.focus()
+  }, [])
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
-      else if (e.key === ' ') { e.preventDefault(); toggle() }
+      else if (e.key === ' ' && !(document.activeElement instanceof HTMLButtonElement || document.activeElement instanceof HTMLInputElement)) { e.preventDefault(); toggle() }
       else if (e.key === 'ArrowRight') goTo(index + 1)
       else if (e.key === 'ArrowLeft') goTo(index - 1)
       else if (e.key === '+' || e.key === '=') addMinute()
@@ -130,6 +137,9 @@ export function ClassroomMode({ plan, onClose }: { plan: LessonPlan; onClose: ()
         ))}
       </ol>
 
+      <p className="sr-only" aria-live="polite">
+        {over ? `Time's up for ${stage.name}.` : `Stage ${index + 1} of ${stages.length}: ${stage.name}, ${stage.minutes} minutes.`}
+      </p>
       <div className="class-main">
         <div className="class-text">
           <p className="class-step hand">Stage {index + 1} of {stages.length} · {TALK[stage.interaction].label}</p>

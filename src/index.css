@@ -133,6 +133,9 @@
 }
 
 * { box-sizing: border-box; }
+.skip-link { position: absolute; left: var(--s-4); top: -100px; z-index: 50; padding: var(--s-2) var(--s-4); background: var(--ink); color: var(--paper); border-radius: var(--r-md); font-weight: 600; }
+.skip-link:focus { top: var(--s-3); }
+main:focus { outline: none; }
 body { margin: 0; }
 h1, h2, h3, h4 { line-height: 1.2; margin: 0 0 var(--s-2); }
 h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; }
@@ -241,7 +244,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 /* Language marquee: a strip of cobalt tape that scrolls forever; hover to pause */
 .marquee { position: relative; margin: 0 calc(50% - 50vw) var(--s-12); transform: rotate(-1.5deg); background: var(--brand); color: var(--brand-ink); border-block: 2px solid var(--ink); overflow: hidden; }
 .marquee-track { display: flex; width: max-content; align-items: center; animation: marquee 48s linear infinite; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee:hover .marquee-track, :root[data-motion='paused'] .marquee-track { animation-play-state: paused; }
+button.motion-toggle { position: absolute; right: max(var(--s-2), calc(50vw - 580px)); top: 50%; translate: 0 -50%; z-index: 1; padding: 2px var(--s-3); font-size: var(--text-xs); background: var(--surface); color: var(--ink); box-shadow: 1px 1px 0 var(--ink); }
+button.motion-toggle:has(> .icon:first-child) { padding-left: var(--s-2); }
 .marquee-label { position: absolute; inset: 0 auto 0 max(0px, calc(50vw - 580px)); z-index: 1; display: flex; align-items: center; padding: var(--s-2) var(--s-5); background: var(--accent); color: var(--ink); font-size: var(--text-xl); border-right: 2px solid var(--ink); }
 .marquee ul { display: flex; list-style: none; margin: 0; padding: 0; }
 .marquee li { display: flex; align-items: center; gap: var(--s-5); padding: var(--s-3) 0 var(--s-3) var(--s-5); font-family: var(--font-serif); font-size: var(--text-lg); font-weight: 600; white-space: nowrap; }
@@ -502,8 +507,8 @@ tr.drop-target td { box-shadow: inset 0 3px 0 var(--brand); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(16px); } }
 
 /* ─── Classroom mode: the plan on a projector ─── */
-button.teach { background: var(--tomato-bright); color: #fff; }
-button.teach:hover:not(:disabled) { background: var(--tomato); }
+button.teach { background: var(--tomato); color: var(--brand-ink); }
+button.teach:hover:not(:disabled) { background: color-mix(in srgb, var(--tomato) 85%, var(--ink)); }
 .classroom { position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: column; color: var(--ink); background: var(--paper);
   background-image: radial-gradient(ellipse at 30% 20%, rgb(255 255 255 / 0.05), transparent 60%); outline: none; animation: fade-in 250ms ease-out; }
 .class-progress { list-style: none; margin: 0; padding: var(--s-4) var(--s-6) 0; display: flex; gap: 4px; }

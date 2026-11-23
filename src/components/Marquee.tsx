@@ -1,8 +1,11 @@
 import { L1_OPTIONS } from '../data/l1Notes'
 import { Doodle } from './Doodle'
+import { Icon } from './Icon'
+import { setMotionPaused, useMotionPaused } from '../motion'
 
 /** A strip of tape that scrolls the first languages the planner has tips for. */
 export function Marquee() {
+  const paused = useMotionPaused()
   const items = L1_OPTIONS.map((l) => (
     <li key={l}>
       {l}
@@ -17,6 +20,15 @@ export function Marquee() {
         <ul>{items}</ul>
         <ul>{items}</ul>
       </div>
+      <button
+        type="button"
+        className="motion-toggle"
+        aria-pressed={paused}
+        onClick={() => setMotionPaused(!paused)}
+        title={paused ? 'Play the moving text' : 'Pause the moving text'}
+      >
+        <Icon name={paused ? 'play' : 'pause'} size={14} /> {paused ? 'Play' : 'Pause'}
+      </button>
     </div>
   )
 }

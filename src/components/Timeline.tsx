@@ -23,8 +23,9 @@ export function Timeline({ stages }: { stages: Stage[] }) {
             style={{ flexGrow: Math.max(s.minutes, 0.5), '--i': i } as React.CSSProperties}
             title={`${s.name} · ${s.minutes} min · ${TALK[s.interaction].label}`}
           >
-            <span className="seg-name">{s.name.split(':')[0]}</span>
-            <span className="seg-min">{s.minutes}′</span>
+            <span className="sr-only">{s.name}, {s.minutes} minutes, {TALK[s.interaction].label.toLowerCase()}</span>
+            <span className="seg-name" aria-hidden="true">{s.name.split(':')[0]}</span>
+            <span className="seg-min" aria-hidden="true">{s.minutes}′</span>
           </li>
         ))}
       </ol>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Doodle } from './Doodle'
 import { Icon } from './Icon'
+import { useFocusTrap } from '../useFocusTrap'
 import { draftHandouts, lines, parseGaps, parseRoles, shuffled, type HandoutDraft } from '../handouts'
 import type { LessonPlan } from '../schema'
 
@@ -19,6 +20,7 @@ export function Handouts({ plan, onClose }: { plan: LessonPlan; onClose: () => v
   const [draft, setDraft] = useState<HandoutDraft>(() => draftHandouts(plan))
   const [chosen, setChosen] = useState<Record<Kind, boolean>>({ gapFill: true, cards: true, roles: true, canDo: true })
   const panel = useRef<HTMLDivElement>(null)
+  useFocusTrap(panel)
 
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null
