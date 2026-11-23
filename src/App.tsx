@@ -5,6 +5,7 @@ import { Library } from './components/Library'
 import { PlanView } from './components/PlanView'
 import { ErrorNote } from './components/ErrorNote'
 import { Hero } from './components/Hero'
+import { Icon } from './components/Icon'
 import { Marquee } from './components/Marquee'
 import { PlanSkeleton } from './components/PlanSkeleton'
 import { Settings } from './components/Settings'
@@ -63,6 +64,56 @@ export default function App() {
     requestAnimationFrame(() => planRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
   }
 
+  // Undo history for the plan on screen. Typing is coalesced into one step per pause;
+  // structural edits (move/add/delete stage) always get their own step.
+  const undoStack = useRef<LessonPlan[]>([])
+  const lastEdit = useRef(0)
+  const [undoDepth, setUndoDepth] = useState(0)
+  const [notice, setNotice] = useState('')
+  function resetUndo() { undoStack.current = []; setUndoDepth(0); setNotice('') }
+
+  function changePlan(next: LessonPlan, checkpoint = false) {
+    const now = Date.now()
+    if (current && (checkpoint || now - lastEdit.current > 1000)) {
+      undoStack.current = [...undoStack.current.slice(-49), current]
+      setUndoDepth(undoStack.current.length)
+    }
+    lastEdit.current = checkpoint ? 0 : now
+    setCurrent(next)
+    setDirty(true)
+    setIsExample(false)
+  }
+
+  function undo() {
+    const prev = undoStack.current.pop()
+    if (!prev) return
+    setUndoDepth(undoStack.current.length)
+    lastEdit.current = 0
+    setCurrent(prev)
+    setDirty(true)
+    setNotice('')
+  }
+
+  // ⌘Z / Ctrl+Z undoes plan edits, except inside a text field where the browser's own undo is better.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (!(e.metaKey || e.ctrlKey) || e.shiftKey || e.key.toLowerCase() !== 'z') return
+      const el = document.activeElement
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) return
+      if (tab !== 'plan' || undoStack.current.length === 0) return
+      e.preventDefault()
+      undo()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  })
+
+  useEffect(() => {
+    if (!notice) return
+    const id = setTimeout(() => setNotice(''), 6000)
+    return () => clearTimeout(id)
+  }, [notice])
+
   useEffect(() => savePlans(plans), [plans])
   useReveal()
 
@@ -72,6 +123,7 @@ export default function App() {
     setError('')
     setIsExample(false)
     if (mode === 'template') {
+      resetUndo()
       setVariant(0)
       setCurrent(toPlan(generateTemplatePlan(req, 0), req, 'template'))
       setDirty(true)
@@ -85,6 +137,7 @@ export default function App() {
     const ai = await import('./ai/claudeGenerator')
     try {
       const content = await ai.generateAiPlan(req, settings.apiKey, settings.model)
+      resetUndo()
       setCurrent(toPlan(content, req, 'ai'))
       setDirty(true)
       revealPlan()
@@ -100,8 +153,7 @@ export default function App() {
     setIsExample(false)
     const v = variant + 1
     setVariant(v)
-    setCurrent({ ...toPlan(generateTemplatePlan(current.request, v), current.request, 'template'), id: current.id, tags: current.tags })
-    setDirty(true)
+    changePlan({ ...toPlan(generateTemplatePlan(current.request, v), current.request, 'template'), id: current.id, tags: current.tags }, true)
     setGeneration((g) => g + 1)
   }
 
@@ -114,6 +166,7 @@ export default function App() {
   }
 
   function open(plan: LessonPlan) {
+    resetUndo()
     setIsExample(false)
     setCurrent(plan)
     setDirty(false)
@@ -176,7 +229,10 @@ export default function App() {
                 key={generation}
                 plan={current}
                 saved={isSaved}
-                onChange={(p) => { setCurrent(p); setDirty(true); setIsExample(false) }}
+                onChange={changePlan}
+                onUndo={undo}
+                canUndo={undoDepth > 0}
+                onNotice={setNotice}
                 onSave={saveCurrent}
                 onRegenerate={current.source === 'template' ? regenerate : undefined}
               />
@@ -207,6 +263,13 @@ export default function App() {
         {tab === 'settings' && <Settings settings={settings} onSave={(s) => { setSettings(s); saveSettings(s) }} />}
         {tab === 'about' && <About />}
       </main>
+
+      {notice && tab === 'plan' && (
+        <div className="toast no-print" role="status">
+          {notice}
+          <button onClick={undo}><Icon name="undo" size={14} /> Undo</button>
+        </div>
+      )}
 
       <footer className="no-print">
         Made by <a href="https://github.com/Prestoj01" target="_blank" rel="noreferrer">Preston</a> · Free and open source ·{' '}
