@@ -42,6 +42,9 @@ export function ClassroomMode({ plan, onClose }: { plan: LessonPlan; onClose: ()
   const [remaining, setRemaining] = useState(() => (stages[0]?.minutes ?? 0) * 60)
   const [running, setRunning] = useState(false)
   const [sound, setSound] = useState(true)
+  // The latest remaining time, readable from event handlers without waiting for a re-render.
+  const remainingRef = useRef(remaining)
+  remainingRef.current = remaining
   const endAt = useRef<number | null>(null)
   const chimed = useRef(false)
   const root = useRef<HTMLDivElement>(null)
@@ -54,6 +57,7 @@ export function ClassroomMode({ plan, onClose }: { plan: LessonPlan; onClose: ()
     if (i < 0 || i >= stages.length) return
     setIndex(i)
     setRemaining(stages[i].minutes * 60)
+    remainingRef.current = stages[i].minutes * 60
     setRunning(false)
     endAt.current = null
     chimed.current = false
@@ -62,10 +66,10 @@ export function ClassroomMode({ plan, onClose }: { plan: LessonPlan; onClose: ()
   const toggle = useCallback(() => {
     setRunning((r) => {
       if (r) { endAt.current = null; return false }
-      endAt.current = Date.now() + remaining * 1000
+      endAt.current = Date.now() + remainingRef.current * 1000
       return true
     })
-  }, [remaining])
+  }, [])
 
   const addMinute = useCallback(() => {
     setRemaining((s) => s + 60)

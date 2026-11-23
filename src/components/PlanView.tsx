@@ -78,17 +78,21 @@ export function PlanView({ plan, saved, onChange, onSave, onRegenerate, onUndo, 
         {teaching && <ClassroomMode plan={plan} onClose={() => setTeaching(false)} />}
       </Suspense>
       <div className="toolbar no-print">
-        <button className="teach" onClick={() => setTeaching(true)} disabled={plan.stages.length === 0}><Icon name="play" /> Teach this lesson</button>
-        <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
-        {onUndo && <button className="secondary" onClick={onUndo} disabled={!canUndo} title="Undo (⌘Z / Ctrl+Z)"><Icon name="undo" /> Undo</button>}
-        <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
-        {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
-        <button className="secondary" onClick={() => setHandouts(true)}><Icon name="sheets" /> Handouts</button>
-        <button className="secondary" onClick={share}><Icon name="link" /> Share link</button>
-        <button className="secondary" onClick={() => window.print()}><Icon name="printer" /> Print</button>
-        <button className="secondary" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')}>
-          <Icon name="download" /> Download .md
-        </button>
+        <div className="toolbar-group">
+          <button className="teach" onClick={() => setTeaching(true)} disabled={plan.stages.length === 0}><Icon name="play" /> Teach this lesson</button>
+          <button onClick={() => setEditing((e) => !e)}><Icon name={editing ? 'check' : 'pencil'} /> {editing ? 'Done editing' : 'Edit'}</button>
+          <button onClick={onSave} disabled={saved}><span key={String(saved)} className={saved ? 'icon-slot pop' : 'icon-slot'}><Icon name={saved ? 'check' : 'bookmark'} /></span> {saved ? 'Saved' : 'Save'}</button>
+          {onUndo && (editing || canUndo) && <button className="secondary" onClick={onUndo} disabled={!canUndo} title="Undo (⌘Z / Ctrl+Z)"><Icon name="undo" /> Undo</button>}
+          {onRegenerate && <button className="secondary" onClick={onRegenerate}><Icon name="shuffle" /> Try different activities</button>}
+          <button className="secondary" onClick={() => setHandouts(true)}><Icon name="sheets" /> Handouts</button>
+        </div>
+        <div className="toolbar-group export" role="group" aria-label="Share and export">
+          <button className="secondary small" onClick={share}><Icon name="link" size={14} /> Share link</button>
+          <button className="secondary small" onClick={() => window.print()}><Icon name="printer" size={14} /> Print</button>
+          <button className="secondary small" onClick={() => downloadFile(`${slugify(plan.title)}.md`, planToMarkdown(plan), 'text/markdown')} title="Download as Markdown">
+            <Icon name="download" size={14} /> .md
+          </button>
+        </div>
       </div>
 
       <p className="print-only print-brand">
